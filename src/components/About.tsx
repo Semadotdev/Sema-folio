@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useContent } from "@/context/ContentContext";
 
 export default function About() {
+  const { content } = useContent();
   return (
     <section id="about" className="py-24 px-6">
       <div className="mx-auto max-w-6xl">
@@ -43,20 +45,15 @@ export default function About() {
               About Me
             </p>
             <h2 className="text-3xl sm:text-4xl font-bold mb-6">
-              Turning ideas into
-              <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent"> digital reality</span>
+              <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+                {content.about.heading}
+              </span>
             </h2>
-            <p className="text-zinc-400 leading-relaxed mb-6">
-              I&apos;m <strong className="text-white">Jiro Luis Fandi&ntilde;o Manalo</strong> &mdash; also known as Semadotdev &mdash; an IT student
-              at Pamantasan ng Lungsod ng San Pablo and a freelance developer
-              passionate about building intelligent web applications. From AI-powered
-              chat interfaces to performant full-stack platforms, I bring ideas to
-              life through clean code and thoughtful design.
-            </p>
-            <p className="text-zinc-400 leading-relaxed mb-8">
-              Based in Alaminos, Laguna, I&apos;m always exploring new technologies
-              and crafting digital experiences that make a difference.
-            </p>
+            {content.about.paragraphs.map((p, i) => (
+              <p key={i} className={`text-zinc-400 leading-relaxed ${i < content.about.paragraphs.length - 1 ? "mb-6" : "mb-8"}`}>
+                {p}
+              </p>
+            ))}
             <div className="flex flex-wrap gap-4">
               {["React", "Next.js", "TypeScript", "Node.js", "Tailwind CSS"].map((tech) => (
                 <span

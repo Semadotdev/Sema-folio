@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useContent } from "@/context/ContentContext";
 
 const socials = [
   { name: "GitHub", href: "https://github.com/Semadotdev" },
@@ -11,6 +12,7 @@ const socials = [
 ];
 
 export default function Contact() {
+  const { content } = useContent();
   return (
     <section id="contact" className="py-24 px-6">
       <div className="mx-auto max-w-6xl">
@@ -30,7 +32,7 @@ export default function Contact() {
             </span>
           </h2>
           <p className="text-zinc-400 mt-4 max-w-lg mx-auto">
-            Have a project in mind? Let&apos;s work together to bring your ideas to life.
+            {content.contact.tagline}
           </p>
         </motion.div>
 

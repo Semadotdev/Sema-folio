@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useContent } from "@/context/ContentContext";
 
 const links = [
   { label: "About", href: "#about" },
@@ -12,13 +13,17 @@ const links = [
 ];
 
 export default function Header() {
+  const { isAdmin } = useContent();
   const [open, setOpen] = useState(false);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
       <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
-        <a href="#">
+        <a href="#" className="flex items-center gap-2">
           <img src="/images/Semadotdev-logo-header.png" alt="Semadotdev" className="h-8 w-auto" />
+          {isAdmin && (
+            <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)] animate-pulse" />
+          )}
         </a>
 
         <nav className="hidden md:flex items-center gap-8">

@@ -1,8 +1,27 @@
 "use client";
 
+import { useState, useRef } from "react";
 import { motion } from "framer-motion";
+import { useContent } from "@/context/ContentContext";
+import PasswordModal from "@/components/PasswordModal";
 
 export default function Hero() {
+  const { content, setPasswordPromptOpen } = useContent();
+  const [clickCount, setClickCount] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleLogoClick = () => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    const next = clickCount + 1;
+    setClickCount(next);
+    if (next >= 5) {
+      setClickCount(0);
+      setPasswordPromptOpen(true);
+    } else {
+      timerRef.current = setTimeout(() => setClickCount(0), 3000);
+    }
+  };
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-transparent to-indigo-900/20" />
@@ -15,7 +34,12 @@ export default function Hero() {
           transition={{ duration: 0.5 }}
           className="mb-6"
         >
-          <img src="/images/Semadotdev-logo.png" alt="Semadotdev" className="w-24 h-24 mx-auto" />
+          <img
+            src="/images/Semadotdev-logo.png"
+            alt="Semadotdev"
+            onClick={handleLogoClick}
+            className="w-24 h-24 mx-auto cursor-pointer transition-all duration-300 hover:drop-shadow-[0_0_30px_rgba(59,130,246,0.8)] hover:scale-105 active:scale-95"
+          />
         </motion.div>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
@@ -33,10 +57,10 @@ export default function Hero() {
           className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-tight mb-6"
         >
           <span className="bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-400 bg-clip-text text-transparent">
-            Building Digital
+            {content.hero.line1}
           </span>
           <br />
-          <span className="text-white">Experiences</span>
+          <span className="text-white">{content.hero.line2}</span>
         </motion.h1>
 
         <motion.p
@@ -45,7 +69,7 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-lg sm:text-xl text-zinc-400 max-w-2xl mx-auto mb-10"
         >
-          IT Student &amp; Freelance Developer crafting modern web applications with cutting-edge technologies.
+          {content.hero.subtitle}
         </motion.p>
 
         <motion.div
@@ -86,6 +110,8 @@ export default function Hero() {
           </svg>
         </motion.a>
       </motion.div>
+
+      <PasswordModal />
     </section>
   );
 }

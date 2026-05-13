@@ -1,25 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-
-const skillCategories = [
-  {
-    title: "Programming",
-    skills: ["Web Development", "Basic Programming", "Algorithms", "Python", "JavaScript"],
-  },
-  {
-    title: "Technical",
-    skills: ["Computer Literate", "MS Office", "IT Support", "Hardware Basics"],
-  },
-  {
-    title: "Soft Skills",
-    skills: ["Adaptability", "Communication", "Goal-Oriented", "Time Management"],
-  },
-  {
-    title: "Certifications",
-    skills: ["Cisco: Intro to Data Science", "Cisco: Data Science Essentials", "Cisco: Python for Data Science"],
-  },
-];
+import { useContent } from "@/context/ContentContext";
 
 const container = {
   hidden: {},
@@ -34,6 +16,7 @@ const item = {
 };
 
 export default function Skills() {
+  const { content } = useContent();
   return (
     <section id="skills" className="py-24 px-6">
       <div className="mx-auto max-w-6xl">
@@ -61,7 +44,7 @@ export default function Skills() {
           viewport={{ once: true }}
           className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"
         >
-          {skillCategories.map((category) => (
+          {content.skills.map((category) => (
             <motion.div
               key={category.title}
               variants={item}
