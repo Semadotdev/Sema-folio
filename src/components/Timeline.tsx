@@ -18,7 +18,7 @@ const experiences = [
   {
     role: "Elementary Education",
     company: "Alaminos Elementary School",
-    period: "2010 - 2016",
+    period: "2015 - 2016",
     description: "Completed basic education with a focus on foundational learning.",
   },
 ];
