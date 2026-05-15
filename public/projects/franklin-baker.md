@@ -1,6 +1,6 @@
-# Franklin Baker WMS & Baktag
+# Baktag
 
-A warehouse management system and baktag utility for Franklin Baker, designed to streamline inventory tracking and tag management.
+A warehouse management system and label printing utility, designed to streamline inventory tracking and tag management.
 
 ## Tech Stack
 

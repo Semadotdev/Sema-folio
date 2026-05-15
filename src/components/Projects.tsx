@@ -27,8 +27,8 @@ const defaultProjects: Project[] = [
     readmeUrl: "https://raw.githubusercontent.com/Semadotdev/luna-ai/main/README.md",
   },
   {
-    title: "Franklin Baker WMS & Baktag",
-    description: "A warehouse management system and baktag utility for Franklin Baker, designed to streamline inventory tracking and tag management.",
+    title: "Baktag",
+    description: "A warehouse management system and baktag utility for ██████████████, designed to streamline inventory tracking and tag management.",
     tags: ["PHP", "MySQL", "WMS", "Inventory", "BarTender"],
     readmeUrl: "/projects/franklin-baker.md",
     favicon: "/images/favicon.png",
