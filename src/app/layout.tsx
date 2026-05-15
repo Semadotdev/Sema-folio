@@ -22,8 +22,11 @@ export const metadata: Metadata = {
   },
   description: "A modern portfolio showcasing projects, skills, and experiences.",
   icons: {
-    icon: "/images/Semadotdev-logo.png",
-    apple: "/images/Semadotdev-logo.png",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.png", type: "image/png", sizes: "32x32" },
+    ],
+    apple: "/apple-touch-icon.png",
   },
 };
 
