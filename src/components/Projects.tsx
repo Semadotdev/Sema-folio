@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, type MouseEvent } from "react";
 import { motion } from "framer-motion";
 import { useContent } from "@/context/ContentContext";
 import ProjectModal from "./ProjectModal";
@@ -32,6 +32,15 @@ const defaultProjects: Project[] = [
     tags: ["PHP", "MySQL", "WMS", "Inventory", "BarTender"],
     readmeUrl: "/projects/franklin-baker.md",
     favicon: "/images/favicon.png",
+  },
+  {
+    title: "Quantinda",
+    description: "A smart sari-sari store Inventory and POS system designed to simplify sales tracking, inventory management, and daily store operations.",
+    tags: ["Next.js", "Prisma", "PostgreSQL", "NextAuth", "TanStack Query"],
+    github: "https://github.com/Semadotdev/Quantinda",
+    demo: "https://quantinda.vercel.app",
+    favicon: "/images/projects/quantinda.png",
+    readmeUrl: "https://raw.githubusercontent.com/Semadotdev/Quantinda/main/README.md",
   },
 ];
 
@@ -67,6 +76,43 @@ function extractFirstParagraph(md: string): string {
     .join(" ")
     .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
     .trim();
+}
+
+function TiltCard({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+    const el = ref.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = ((y - centerY) / centerY) * -5;
+    const rotateY = ((x - centerX) / centerX) * 5;
+    el.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+    el.style.transition = "transform 0.1s ease-out";
+  };
+
+  const handleMouseLeave = () => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.transform = "perspective(800px) rotateX(0deg) rotateY(0deg) scale(1)";
+    el.style.transition = "transform 0.4s ease-out";
+  };
+
+  return (
+    <div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ transformStyle: "preserve-3d" }}
+      className="contents"
+    >
+      {children}
+    </div>
+  );
 }
 
 const container = {
@@ -122,7 +168,7 @@ export default function Projects() {
           </p>
           <h2 className="text-3xl sm:text-4xl font-bold">
             My{" "}
-            <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+            <span className="bg-[length:200%_auto] bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-400 bg-clip-text text-transparent animate-[gradient-shift_4s_ease_infinite]">
               Projects
             </span>
           </h2>
@@ -141,9 +187,12 @@ export default function Projects() {
               <motion.div
                 key={project.title}
                 variants={item}
-                onClick={() => setSelected(project)}
-                className="group relative rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 hover:border-zinc-700 transition-all hover:-translate-y-1 cursor-pointer"
               >
+                <TiltCard>
+                <div
+                  onClick={() => setSelected(project)}
+                  className="group relative rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 hover:border-zinc-700 transition-all hover:-translate-y-1 cursor-pointer"
+                >
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/5 to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                 {!isUserAdded && (
                   <div className="absolute inset-0 rounded-2xl overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -202,14 +251,16 @@ export default function Projects() {
                       </span>
                     ))}
                   </div>
+                  </div>
                 </div>
+                </TiltCard>
               </motion.div>
             );
           })}
 
           <motion.div
             variants={item}
-            className="sm:col-span-2 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 opacity-60"
+            className={`rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 opacity-60 ${allProjects.length % 2 === 0 ? "sm:col-span-2" : ""}`}
           >
             <div className="w-10 h-10 rounded-lg bg-zinc-800 mb-4 flex items-center justify-center text-zinc-500 text-sm">
               🚧

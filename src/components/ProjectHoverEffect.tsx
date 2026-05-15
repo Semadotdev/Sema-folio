@@ -1,18 +1,28 @@
 "use client";
 
-import { useMemo } from "react";
+import { useState } from "react";
+
+function seededRandom(seed: number): number {
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+}
+
+function generateStars() {
+  return Array.from({ length: 14 }, (_, i) => {
+    const s = i * 31 + 7;
+    return {
+      id: i,
+      top: `${(seededRandom(s) * 90 + 5).toFixed(4)}%`,
+      left: `${(seededRandom(s + 1) * 90 + 5).toFixed(4)}%`,
+      size: parseFloat((seededRandom(s + 2) * 3 + 1).toFixed(4)),
+      delay: parseFloat((seededRandom(s + 3) * 3).toFixed(4)),
+      duration: parseFloat((seededRandom(s + 4) * 2 + 1.5).toFixed(4)),
+    };
+  });
+}
 
 function LunaTheme() {
-  const stars = useMemo(() => {
-    return Array.from({ length: 14 }, (_, i) => ({
-      id: i,
-      top: `${Math.random() * 90 + 5}%`,
-      left: `${Math.random() * 90 + 5}%`,
-      size: Math.random() * 3 + 1,
-      delay: Math.random() * 3,
-      duration: Math.random() * 2 + 1.5,
-    }));
-  }, []);
+  const [stars] = useState(generateStars);
 
   return (
     <div className="absolute inset-0 pointer-events-none">
@@ -90,16 +100,21 @@ function LunaTheme() {
   );
 }
 
-function BaktagTheme() {
-  const bars = useMemo(() => {
-    return Array.from({ length: 20 }, (_, i) => ({
+function generateBars() {
+  return Array.from({ length: 20 }, (_, i) => {
+    const s = i * 53 + 11;
+    return {
       id: i,
-      width: Math.random() * 6 + 2,
-      height: `${Math.random() * 40 + 20}%`,
-      bottom: `${Math.random() * 30 + 5}%`,
-      delay: Math.random() * 0.5,
-    }));
-  }, []);
+      width: parseFloat((seededRandom(s) * 6 + 2).toFixed(4)),
+      height: `${(seededRandom(s + 1) * 40 + 20).toFixed(4)}%`,
+      bottom: `${(seededRandom(s + 2) * 30 + 5).toFixed(4)}%`,
+      delay: parseFloat((seededRandom(s + 3) * 0.5).toFixed(4)),
+    };
+  });
+}
+
+function BaktagTheme() {
+  const [bars] = useState(generateBars);
 
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -173,6 +188,163 @@ function BaktagTheme() {
   );
 }
 
+function generateCoins() {
+  return Array.from({ length: 12 }, (_, i) => {
+    const s = i * 37 + 13;
+    return {
+      id: i,
+      left: `${(seededRandom(s) * 90 + 5).toFixed(4)}%`,
+      size: parseFloat((seededRandom(s + 1) * 6 + 4).toFixed(4)),
+      delay: parseFloat((seededRandom(s + 2) * 4).toFixed(4)),
+      duration: parseFloat((seededRandom(s + 3) * 3 + 3).toFixed(4)),
+      drift: parseFloat((seededRandom(s + 4) * 40 - 20).toFixed(4)),
+      gold: seededRandom(s + 5) > 0.5,
+    };
+  });
+}
+
+function generateTags() {
+  return Array.from({ length: 4 }, (_, i) => {
+    const s = i * 29 + 7;
+    return {
+      id: i,
+      left: `${(seededRandom(s) * 80 + 10).toFixed(4)}%`,
+      top: `${(seededRandom(s + 1) * 60 + 20).toFixed(4)}%`,
+      delay: parseFloat((seededRandom(s + 2) * 5).toFixed(4)),
+      rotation: parseFloat((seededRandom(s + 3) * 20 - 10).toFixed(4)),
+    };
+  });
+}
+
+function QuantindaTheme() {
+  const [coins] = useState(generateCoins);
+  const [tags] = useState(generateTags);
+
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      <style>{`
+        @keyframes bagFloat {
+          0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.15; }
+          50% { transform: translateY(-8px) rotate(3deg); opacity: 0.35; }
+        }
+        @keyframes coinFloat {
+          0% { transform: translateY(100%) translateX(0) scale(0.5); opacity: 0; }
+          20% { opacity: 0.5; }
+          80% { opacity: 0.5; }
+          100% { transform: translateY(-60px) translateX(var(--drift)) scale(1); opacity: 0; }
+        }
+        @keyframes scanLine {
+          0% { top: 0; opacity: 0; }
+          10% { opacity: 0.6; }
+          90% { opacity: 0.6; }
+          100% { top: 100%; opacity: 0; }
+        }
+        @keyframes tagSwing {
+          0%, 100% { transform: rotate(var(--rot)) translateY(0); opacity: 0.15; }
+          50% { transform: rotate(var(--rot)) translateY(-4px); opacity: 0.3; }
+        }
+        @keyframes shelfGlow {
+          0%, 100% { opacity: 0.05; }
+          50% { opacity: 0.15; }
+        }
+        @keyframes registerBlip {
+          0%, 100% { opacity: 0.1; transform: scale(1); }
+          50% { opacity: 0.3; transform: scale(1.1); }
+        }
+      `}</style>
+
+      <div
+        className="absolute left-4 top-1/3 text-emerald-400"
+        style={{
+          animation: "bagFloat 4s ease-in-out infinite",
+        }}
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <path d="M16 10a4 4 0 01-8 0" />
+        </svg>
+      </div>
+      <div
+        className="absolute right-6 top-1/4 text-blue-400"
+        style={{
+          animation: "bagFloat 4.5s ease-in-out 1.5s infinite",
+        }}
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <path d="M16 10a4 4 0 01-8 0" />
+        </svg>
+      </div>
+
+      <div
+        className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-400/50 to-transparent"
+        style={{
+          animation: "scanLine 3s ease-in-out infinite",
+        }}
+      />
+
+      {coins.map((coin) => (
+        <div
+          key={coin.id}
+          className="absolute rounded-full"
+          style={{
+            left: coin.left,
+            bottom: "10%",
+            width: coin.size,
+            height: coin.size,
+            background: coin.gold
+              ? "radial-gradient(circle, #fbbf24, #d97706)"
+              : "radial-gradient(circle, #9ca3af, #6b7280)",
+            animation: `coinFloat ${coin.duration}s ease-out ${coin.delay}s infinite`,
+            "--drift": `${coin.drift}px`,
+          } as React.CSSProperties}
+        />
+      ))}
+
+      {tags.map((tag) => (
+        <div
+          key={tag.id}
+          className="absolute flex items-center gap-1 rounded border border-emerald-400/20 bg-emerald-400/5 px-2 py-0.5"
+          style={{
+            left: tag.left,
+            top: tag.top,
+            animation: `tagSwing 3.5s ease-in-out ${tag.delay}s infinite`,
+            "--rot": `${tag.rotation}deg`,
+          } as React.CSSProperties}
+        >
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-emerald-400/40">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" />
+            <line x1="7" y1="7" x2="7.01" y2="7" />
+          </svg>
+          <span className="text-[6px] text-emerald-400/30 font-mono">&#8369;{Math.floor(seededRandom(tag.id * 13 + 5) * 100 + 1)}</span>
+        </div>
+      ))}
+
+      <div
+        className="absolute bottom-0 left-0 right-0 h-3"
+        style={{
+          background: "linear-gradient(to top, rgba(16,185,129,0.08), transparent)",
+          animation: "shelfGlow 3s ease-in-out infinite",
+        }}
+      />
+
+      <div
+        className="absolute bottom-1 left-1/2 -translate-x-1/2 text-emerald-400/20"
+        style={{
+          animation: "registerBlip 2s ease-in-out infinite",
+        }}
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <rect x="2" y="4" width="20" height="16" rx="2" />
+          <path d="M8 8h8M8 12h6M8 16h4" />
+        </svg>
+      </div>
+    </div>
+  );
+}
+
 function ShimmerTheme() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -198,6 +370,9 @@ export default function ProjectHoverEffect({ title }: { title: string }) {
   }
   if (title.toLowerCase().includes("franklin") || title.toLowerCase().includes("baktag")) {
     return <BaktagTheme />;
+  }
+  if (title.toLowerCase().includes("quantinda")) {
+    return <QuantindaTheme />;
   }
   return <ShimmerTheme />;
 }

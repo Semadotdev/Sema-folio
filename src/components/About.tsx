@@ -45,7 +45,7 @@ export default function About() {
               About Me
             </p>
             <h2 className="text-3xl sm:text-4xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+              <span className="bg-[length:200%_auto] bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-400 bg-clip-text text-transparent animate-[gradient-shift_4s_ease_infinite]">
                 {content.about.heading}
               </span>
             </h2>
