@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>New Portfolio Message</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+  </style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #0f0f0f; font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #0f0f0f; padding: 40px 16px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" style="max-width: 600px; background-color: #1a1a1a; border-radius: 16px; border: 1px solid #27272a; overflow: hidden;">
+
+          <!-- Gradient accent bar -->
+          <tr>
+            <td style="height: 4px; background: linear-gradient(90deg, #60a5fa, #818cf8, #06b6d4); font-size: 0; line-height: 0;">&nbsp;</td>
+          </tr>
+
+          <!-- Header with monogram -->
+          <tr>
+            <td style="padding: 40px 40px 0 40px; text-align: center;">
+              <table role="presentation" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
+                <tr>
+                  <td align="center" style="width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #3b82f6, #6366f1); font-family: 'Geist', sans-serif; font-size: 20px; font-weight: 700; color: #ffffff; line-height: 48px;">
+                    S
+                  </td>
+                </tr>
+              </table>
+              <h1 style="margin: 20px 0 0 0; font-size: 22px; font-weight: 600; color: #fafafa; letter-spacing: -0.3px;">
+                New Portfolio Message
+              </h1>
+              <p style="margin: 6px 0 0 0; font-size: 14px; color: #a1a1aa;">
+                Someone reached out from your portfolio
+              </p>
+            </td>
+          </tr>
+
+          <!-- Divider -->
+          <tr>
+            <td style="padding: 28px 40px 0 40px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="height: 1px; background-color: #27272a; font-size: 0; line-height: 0;">&nbsp;</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Field: Name -->
+          <tr>
+            <td style="padding: 24px 40px 0 40px;">
+              <p style="margin: 0; font-family: 'Geist Mono', 'SF Mono', 'Courier New', monospace; font-size: 11px; font-weight: 500; color: #a1a1aa; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Name</p>
+              <p style="margin: 0; font-size: 15px; font-weight: 500; color: #fafafa;">{{name}}</p>
+            </td>
+          </tr>
+
+          <!-- Field: Email -->
+          <tr>
+            <td style="padding: 16px 40px 0 40px;">
+              <p style="margin: 0; font-family: 'Geist Mono', 'SF Mono', 'Courier New', monospace; font-size: 11px; font-weight: 500; color: #a1a1aa; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Email</p>
+              <p style="margin: 0; font-size: 15px; color: #60a5fa;">{{email}}</p>
+            </td>
+          </tr>
+
+          <!-- Field: Subject -->
+          <tr>
+            <td style="padding: 16px 40px 0 40px;">
+              <p style="margin: 0; font-family: 'Geist Mono', 'SF Mono', 'Courier New', monospace; font-size: 11px; font-weight: 500; color: #a1a1aa; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Subject</p>
+              <p style="margin: 0; font-size: 15px; color: #fafafa;">{{subject}}</p>
+            </td>
+          </tr>
+
+          <!-- Divider -->
+          <tr>
+            <td style="padding: 24px 40px 0 40px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="height: 1px; background-color: #27272a; font-size: 0; line-height: 0;">&nbsp;</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Field: Message -->
+          <tr>
+            <td style="padding: 24px 40px 0 40px;">
+              <p style="margin: 0; font-family: 'Geist Mono', 'SF Mono', 'Courier New', monospace; font-size: 11px; font-weight: 500; color: #a1a1aa; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Message</p>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #141414; border-radius: 12px; border: 1px solid #27272a;">
+                <tr>
+                  <td style="padding: 16px; font-size: 14px; color: #e4e4e7; line-height: 1.6;">
+                    {{message}}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding: 32px 40px 40px 40px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="height: 1px; background-color: #27272a; font-size: 0; line-height: 0;">&nbsp;</td>
+                </tr>
+              </table>
+              <p style="margin: 16px 0 0 0; font-size: 12px; color: #52525b; text-align: center;">
+                Sent via <span style="color: #71717a;">semadotdev.dev</span>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
