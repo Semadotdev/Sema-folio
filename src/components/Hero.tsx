@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useContent } from "@/context/ContentContext";
 import PasswordModal from "@/components/PasswordModal";
 import AnimatedBackground from "@/components/AnimatedBackground";
+import Logo3D from "@/components/Logo3D";
 import { marked } from "marked";
 
 export default function Hero() {
@@ -75,12 +76,7 @@ export default function Hero() {
               />
             ))}
           </div>
-          <img
-            src="/images/Semadotdev-logo.png"
-            alt="Semadotdev"
-            onClick={handleLogoClick}
-            className="w-24 h-24 mx-auto cursor-pointer transition-all duration-300 hover:drop-shadow-[0_0_30px_rgba(59,130,246,0.8)] hover:scale-105 active:scale-95 relative z-10"
-          />
+          <Logo3D onClick={handleLogoClick} />
         </motion.div>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
