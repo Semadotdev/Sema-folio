@@ -97,7 +97,7 @@ function LogoMesh({ onClick }: { onClick: () => void }) {
   const handleClick = useCallback(
     (e: any) => {
       e.stopPropagation();
-      spinBoost.current = 5;
+      spinBoost.current = 15;
       onClick();
     },
     [onClick]
@@ -217,14 +217,14 @@ function LogoMesh({ onClick }: { onClick: () => void }) {
           ref={meshRef}
           geometry={displacedGeo}
           material={material}
-          onClick={handleClick}
+          onPointerDown={handleClick}
           onPointerOver={() => setHovered(true)}
           onPointerOut={() => setHovered(false)}
         />
       ) : (
         <mesh
           ref={meshRef}
-          onClick={handleClick}
+          onPointerDown={handleClick}
           onPointerOver={() => setHovered(true)}
           onPointerOut={() => setHovered(false)}
         >
@@ -241,7 +241,7 @@ function LogoMesh({ onClick }: { onClick: () => void }) {
 
 export default function Logo3D({ onClick }: { onClick: () => void }) {
   return (
-    <div className="w-40 h-40 mx-auto cursor-pointer relative z-10">
+    <div className="w-40 h-40 mx-auto cursor-pointer relative z-10" style={{ touchAction: 'manipulation' }}>
       <Canvas
         camera={{ position: [0, 0, 2.8], fov: 45 }}
         dpr={[1, 2]}
