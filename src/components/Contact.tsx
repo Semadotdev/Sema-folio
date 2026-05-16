@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useContent } from "@/context/ContentContext";
 import { useState, FormEvent } from "react";
+import { marked } from "marked";
 
 const socials = [
   { name: "GitHub", href: "https://github.com/Semadotdev" },
@@ -67,7 +68,7 @@ export default function Contact() {
             </span>
           </h2>
           <p className="text-zinc-400 mt-4 max-w-lg mx-auto">
-            {content.contact.tagline}
+            <span dangerouslySetInnerHTML={{ __html: marked.parseInline(content.contact.tagline, { async: false }) }} />
           </p>
         </motion.div>
 

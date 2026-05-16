@@ -4,6 +4,10 @@ import { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { marked } from "marked";
 
+function inlineMD(text: string): string {
+  return marked.parseInline(text, { async: false }) as string;
+}
+
 interface Project {
   title: string;
   description: string;
@@ -43,7 +47,7 @@ function FallbackContent({ project }: { project: Project }) {
           {project.title[0]}
         </div>
       )}
-      <p className="text-zinc-400 leading-relaxed max-w-lg">{project.description}</p>
+      <p className="text-zinc-400 leading-relaxed max-w-lg" dangerouslySetInnerHTML={{ __html: inlineMD(project.description) }} />
     </div>
   );
 }
@@ -68,7 +72,7 @@ function createRenderer() {
       2: "text-xl text-blue-300",
       3: "text-base text-indigo-300",
     };
-    return `<h${depth} class="${sizes[depth] ?? "text-sm text-white"} font-bold mt-8 mb-4">${text}</h${depth}>
+    return `<h${depth} class="${sizes[depth] ?? "text-sm text-white"} font-bold mt-8 mb-4">${inlineMD(text)}</h${depth}>
       ${depth <= 2 ? `<div class="h-px bg-gradient-to-r from-blue-500/30 via-indigo-500/20 to-transparent mt-2 mb-4"></div>` : ""}`;
   };
 
@@ -112,7 +116,7 @@ function createRenderer() {
         const clean = txt || item.raw.replace(/^-\s*/, "").trim();
         return clean ? `<div class="flex items-start gap-3 rounded-xl border border-zinc-800 bg-zinc-900/50 p-4 hover:border-zinc-700 transition-colors">
           <span class="w-5 h-5 rounded bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center text-white text-[10px] font-bold mt-0.5 shrink-0">✦</span>
-          <span class="text-zinc-300 text-sm leading-relaxed">${clean}</span>
+          <span class="text-zinc-300 text-sm leading-relaxed">${inlineMD(clean)}</span>
         </div>` : "";
       }).join("");
       return `<div class="grid sm:grid-cols-2 gap-3 my-4">${cards}</div>`;
@@ -124,7 +128,7 @@ function createRenderer() {
         .map((t: any) => (t.tokens ?? []).map((tt: any) => tt.raw ?? "").join(""))
         .join("");
       const clean = txt || item.raw.replace(/^[-*+]\s*/, "").trim();
-      return `<li class="text-zinc-400 text-sm leading-relaxed pl-1 marker:text-blue-400">${clean}</li>`;
+      return `<li class="text-zinc-400 text-sm leading-relaxed pl-1 marker:text-blue-400">${inlineMD(clean)}</li>`;
     }).join("");
     return `<${tag} class="space-y-1.5 my-4 list-inside">${listItems}</${tag}>`;
   };
@@ -140,8 +144,8 @@ function createRenderer() {
       const cards = rows.map((row) => {
         const vals = row.map((c) => c.text);
         return `<div class="rounded-xl border border-zinc-800 bg-zinc-900/50 p-5 hover:border-zinc-700 transition-colors">
-          <span class="text-blue-400 text-xs font-mono tracking-widest uppercase">${vals[0] ?? ""}</span>
-          <p class="text-white text-base mt-2">${vals[1] ?? ""}</p>
+          <span class="text-blue-400 text-xs font-mono tracking-widest uppercase">${inlineMD(vals[0] ?? "")}</span>
+          <p class="text-white text-base mt-2">${inlineMD(vals[1] ?? "")}</p>
         </div>`;
       }).join("");
       return `<div class="grid sm:grid-cols-2 gap-5 my-4">${cards}</div>`;
@@ -152,8 +156,8 @@ function createRenderer() {
       const cards = rows.map((row) => {
         const vals = row.map((c) => c.text);
         return `<div class="flex items-center justify-between gap-4 py-2 px-3 rounded-lg hover:bg-zinc-800/50 transition-colors">
-          <span class="text-white text-sm font-mono">${vals[0] ?? ""}</span>
-          <span class="text-zinc-500 text-xs text-right">${vals[1] ?? ""}</span>
+          <span class="text-white text-sm font-mono">${inlineMD(vals[0] ?? "")}</span>
+          <span class="text-zinc-500 text-xs text-right">${inlineMD(vals[1] ?? "")}</span>
         </div>`;
       }).join("");
       return `<div class="rounded-xl border border-zinc-700 bg-zinc-900/50 my-4 overflow-hidden">
@@ -165,10 +169,10 @@ function createRenderer() {
     }
 
     const thead = header
-      .map((c) => `<th class="border border-zinc-700 bg-zinc-800 px-3 py-2 text-left text-white text-xs font-semibold uppercase tracking-wider">${c.text}</th>`)
+      .map((c) => `<th class="border border-zinc-700 bg-zinc-800 px-3 py-2 text-left text-white text-xs font-semibold uppercase tracking-wider">${inlineMD(c.text)}</th>`)
       .join("");
     const tbody = rows.map((row) =>
-      `<tr class="border-b border-zinc-800 last:border-0">${row.map((c) => `<td class="px-3 py-2 text-zinc-400 text-sm">${c.text}</td>`).join("")}</tr>`
+      `<tr class="border-b border-zinc-800 last:border-0">${row.map((c) => `<td class="px-3 py-2 text-zinc-400 text-sm">${inlineMD(c.text)}</td>`).join("")}</tr>`
     ).join("");
     return `<div class="overflow-x-auto my-4 rounded-xl border border-zinc-800">
       <table class="w-full border-collapse"><thead><tr>${thead}</tr></thead><tbody>${tbody}</tbody></table>
@@ -176,13 +180,13 @@ function createRenderer() {
   };
 
   renderer.blockquote = function ({ text }) {
-    return `<blockquote class="border-l-2 border-blue-500 pl-4 my-4 text-zinc-400 text-sm italic">${text}</blockquote>`;
+    return `<blockquote class="border-l-2 border-blue-500 pl-4 my-4 text-zinc-400 text-sm italic">${inlineMD(text)}</blockquote>`;
   };
 
   renderer.paragraph = function ({ text }) {
     const trimmed = text.trim();
     if (!trimmed) return "";
-    return `<p class="text-zinc-300 text-sm leading-relaxed my-3">${trimmed}</p>`;
+    return `<p class="text-zinc-300 text-sm leading-relaxed my-3">${inlineMD(trimmed)}</p>`;
   };
 
   renderer.hr = function () {

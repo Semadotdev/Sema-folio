@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useContent } from "@/context/ContentContext";
 import PasswordModal from "@/components/PasswordModal";
 import AnimatedBackground from "@/components/AnimatedBackground";
+import { marked } from "marked";
 
 export default function Hero() {
   const { content, setPasswordPromptOpen } = useContent();
@@ -109,7 +110,7 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-lg sm:text-xl text-zinc-400 max-w-2xl mx-auto mb-10"
         >
-          {content.hero.subtitle}
+          <span dangerouslySetInnerHTML={{ __html: marked.parseInline(content.hero.subtitle, { async: false }) }} />
         </motion.p>
 
         <motion.div

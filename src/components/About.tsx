@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useContent } from "@/context/ContentContext";
+import { marked } from "marked";
 
 export default function About() {
   const { content } = useContent();
@@ -50,9 +51,9 @@ export default function About() {
               </span>
             </h2>
             {content.about.paragraphs.map((p, i) => (
-              <p key={i} className={`text-zinc-400 leading-relaxed ${i < content.about.paragraphs.length - 1 ? "mb-6" : "mb-8"}`}>
-                {p}
-              </p>
+              <p key={i} className={`text-zinc-400 leading-relaxed ${i < content.about.paragraphs.length - 1 ? "mb-6" : "mb-8"}`}
+                dangerouslySetInnerHTML={{ __html: marked.parseInline(p, { async: false }) }}
+              />
             ))}
             <div className="flex flex-wrap gap-4">
               {["React", "Next.js", "TypeScript", "Node.js", "Tailwind CSS"].map((tech) => (

@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useContent } from "@/context/ContentContext";
 import ProjectModal from "./ProjectModal";
 import ProjectHoverEffect from "./ProjectHoverEffect";
+import { marked } from "marked";
 
 interface Project {
   title: string;
@@ -240,7 +241,7 @@ export default function Projects() {
                       </a>
                     )}
                   </div>
-                  <p className="text-zinc-400 text-sm leading-relaxed mb-4">{project.description}</p>
+                  <p className="text-zinc-400 text-sm leading-relaxed mb-4" dangerouslySetInnerHTML={{ __html: marked.parseInline(project.description, { async: false }) }} />
                   <div className="flex flex-wrap gap-2">
                     {project.tags.map((tag) => (
                       <span

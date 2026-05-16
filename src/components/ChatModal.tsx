@@ -3,6 +3,12 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { marked } from "marked";
 
+function parseChatMD(content: string): string {
+  const renderer = new marked.Renderer();
+  renderer.strong = ({ text }) => `<strong class="text-white font-semibold">${text}</strong>`;
+  return marked.parse(content, { async: false, renderer }) as string;
+}
+
 interface Message {
   role: "user" | "assistant";
   content: string;
@@ -19,9 +25,10 @@ const TOPIC_META: Record<string, { icon: string; label: string; headingColor: st
 
 function renderCard(type: string, inner: string): string {
   const meta = TOPIC_META[type];
-  if (!meta) return marked.parse(inner, { async: false }) as string;
+  if (!meta) return parseChatMD(inner);
 
   const renderer = new marked.Renderer();
+  renderer.strong = ({ text }) => `<strong class="text-white font-semibold">${text}</strong>`;
   renderer.code = ({ text }) =>
     `<pre class="rounded-lg border-l-2 ${meta.borderColor} bg-zinc-800/50 p-3 my-3 overflow-x-auto"><code class="text-sm text-zinc-200 font-mono leading-relaxed">${text}</code></pre>`;
   renderer.codespan = ({ text }) =>
@@ -38,7 +45,7 @@ function formatContent(content: string): string {
   content = content.replace(/[`']+\s*$/, "").trim();
   const parts = content.split(/(:::contact|:::skills|:::project|:::timeline|:::cta|:::about|:::)/);
   if (parts.length <= 1) {
-    return marked.parse(content, { async: false }) as string;
+    return parseChatMD(content);
   }
 
   let html = "";
@@ -64,7 +71,7 @@ function formatContent(content: string): string {
       html += part;
       i++;
     } else {
-      html += marked.parse(part, { async: false }) as string;
+      html += parseChatMD(part);
       i++;
     }
   }
