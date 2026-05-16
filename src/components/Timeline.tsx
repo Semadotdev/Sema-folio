@@ -7,7 +7,7 @@ const experiences = [
     role: "Bachelor of Science in Information Technology",
     company: "Pamantasan ng Lungsod ng San Pablo",
     period: "2022 - Present",
-    description: "Pursuing a degree in IT with focus on software development, web technologies, and data science.",
+    description: "Pursuing a Bachelor's in Information Technology with a focus on software engineering, web technologies, and data science.",
   },
   {
     role: "Secondary Education",

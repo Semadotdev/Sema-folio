@@ -71,6 +71,8 @@ function LogoMesh({ onClick }: { onClick: () => void }) {
         side: THREE.DoubleSide,
         metalness: 0.1,
         roughness: 0.3,
+        emissive: "#3b82f6",
+        emissiveIntensity: 0.25,
         alphaTest: 0.01,
       }),
     [texture]
@@ -84,8 +86,8 @@ function LogoMesh({ onClick }: { onClick: () => void }) {
         side: THREE.DoubleSide,
         color: "#3b82f6",
         emissive: "#3b82f6",
-        emissiveIntensity: 2.0,
-        opacity: 0.35,
+        emissiveIntensity: 2.5,
+        opacity: 0.5,
         alphaTest: 0.01,
         depthWrite: false,
       }),
@@ -143,7 +145,7 @@ function LogoMesh({ onClick }: { onClick: () => void }) {
       }
       if (glowRef.current && meshRef.current) {
         glowRef.current.rotation.copy(meshRef.current.rotation);
-        glowRef.current.scale.setScalar(meshRef.current.scale.x * 1.03);
+        glowRef.current.scale.setScalar(meshRef.current.scale.x * 1.08);
       }
 
       if (progress >= 1) {
@@ -181,9 +183,19 @@ function LogoMesh({ onClick }: { onClick: () => void }) {
     }
 
     if (glowRef.current && meshRef.current) {
-      glowRef.current.rotation.copy(meshRef.current.rotation);
+      const glow = glowRef.current;
+      const mat = glow.material as THREE.MeshStandardMaterial;
+
+      glow.rotation.copy(meshRef.current.rotation);
+
       const s = meshRef.current.scale.x;
-      glowRef.current.scale.setScalar(s * 1.03);
+      const wobble = 1.05 + 0.05 * Math.sin(t * 1.5);
+      glow.scale.setScalar(s * 1.08 * wobble);
+
+      mat.opacity = 0.25 + 0.35 * Math.sin(t * 1.8);
+
+      glow.position.x = 0.03 * Math.sin(t * 0.8);
+      glow.position.y = 0.03 * Math.cos(t * 0.6);
     }
   });
 
@@ -192,12 +204,13 @@ function LogoMesh({ onClick }: { onClick: () => void }) {
       {displacedGeo && (
         <mesh
           ref={glowRef}
-          geometry={displacedGeo}
           material={glowMat}
-          position={[0, 0, -0.05]}
-          scale={1.03}
+          position={[0, 0, -0.35]}
+          scale={1.08}
           renderOrder={1}
-        />
+        >
+          <planeGeometry args={[2, 2]} />
+        </mesh>
       )}
       {displacedGeo ? (
         <mesh
@@ -228,18 +241,18 @@ function LogoMesh({ onClick }: { onClick: () => void }) {
 
 export default function Logo3D({ onClick }: { onClick: () => void }) {
   return (
-    <div className="w-24 h-24 mx-auto cursor-pointer relative z-10">
+    <div className="w-40 h-40 mx-auto cursor-pointer relative z-10">
       <Canvas
         camera={{ position: [0, 0, 2.8], fov: 45 }}
         dpr={[1, 2]}
         gl={{ antialias: true }}
         style={{ width: "100%", height: "100%" }}
       >
-        <ambientLight intensity={0.6} />
-        <directionalLight position={[2, 3, 2]} intensity={0.8} />
+        <ambientLight intensity={0.8} />
+        <directionalLight position={[2, 3, 2]} intensity={1.0} />
         <directionalLight
           position={[-2, -3, 1]}
-          intensity={0.5}
+          intensity={0.7}
           color="#818cf8"
         />
         <LogoMesh onClick={onClick} />

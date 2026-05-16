@@ -53,24 +53,26 @@ interface ContentContextType {
 
 const STORAGE_KEY = "sema-folio-content";
 const PROJECTS_KEY = "sema-folio-projects";
+const CONTENT_VERSION = 2;
+const VERSION_KEY = "sema-folio-content-version";
 
 const defaultContent: EditableContent = {
   hero: {
     line1: "Building Digital",
     line2: "Experiences",
     subtitle:
-      "IT Student & Freelance Developer crafting modern web applications with cutting-edge technologies.",
+      "Software & Web Developer crafting modern, performant applications with cutting-edge technologies.",
   },
   about: {
     heading: "Turning ideas into digital reality",
     paragraphs: [
-      "I'm Jiro Luis Fandiño Manalo — also known as Semadotdev — an IT student at Pamantasan ng Lungsod ng San Pablo and a freelance developer passionate about building intelligent web applications. From AI-powered chat interfaces to performant full-stack platforms, I bring ideas to life through clean code and thoughtful design.",
-      "Based in Alaminos, Laguna, I'm always exploring new technologies and crafting digital experiences that make a difference.",
+      "I'm Jiro Luis Fandiño Manalo — also known as Semadotdev — a software and web developer passionate about building intelligent, performant applications. From AI-powered chat interfaces to full-stack platforms, I bring ideas to life through clean code and thoughtful design.",
+      "Based in Alaminos, Laguna, I specialize in full-stack development, constantly exploring new technologies and crafting digital experiences that make a difference.",
     ],
   },
   skills: [
-    { title: "Programming", skills: ["Web Development", "Basic Programming", "Algorithms", "Python", "JavaScript"] },
-    { title: "Technical", skills: ["Computer Literate", "MS Office", "IT Support", "Hardware Basics"] },
+    { title: "Programming", skills: ["Web Development", "Software Development", "Algorithms", "Python", "JavaScript", "TypeScript"] },
+    { title: "Technical", skills: ["Full-Stack Development", "System Design", "IT Support", "DevOps Basics"] },
     { title: "Soft Skills", skills: ["Adaptability", "Communication", "Goal-Oriented", "Time Management"] },
     { title: "Certifications", skills: ["Cisco: Intro to Data Science", "Cisco: Data Science Essentials", "Cisco: Python for Data Science"] },
   ],
@@ -121,13 +123,20 @@ export function ContentProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (serverLoaded) {
       try {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          setContent((prev) => ({ ...prev, ...parsed }));
+        const version = localStorage.getItem(VERSION_KEY);
+        if (version !== String(CONTENT_VERSION)) {
+          localStorage.removeItem(STORAGE_KEY);
+          localStorage.removeItem(PROJECTS_KEY);
+          localStorage.setItem(VERSION_KEY, String(CONTENT_VERSION));
+        } else {
+          const saved = localStorage.getItem(STORAGE_KEY);
+          if (saved) {
+            const parsed = JSON.parse(saved);
+            setContent((prev) => ({ ...prev, ...parsed }));
+          }
+          const projects = localStorage.getItem(PROJECTS_KEY);
+          if (projects) setUserProjects((prev) => [...prev, ...JSON.parse(projects)]);
         }
-        const projects = localStorage.getItem(PROJECTS_KEY);
-        if (projects) setUserProjects((prev) => [...prev, ...JSON.parse(projects)]);
       } catch {
         // corrupted local data
       }

@@ -68,8 +68,8 @@ export default function Hero() {
                 key={i}
                 className="absolute rounded-full border border-blue-500/30"
                 style={{
-                  width: 96 + (i + 1) * 40,
-                  height: 96 + (i + 1) * 40,
+                  width: 160 + (i + 1) * 60,
+                  height: 160 + (i + 1) * 60,
                   animation: `glow-ring 3s ease-out ${i * 1}s infinite`,
                   boxShadow: `0 0 ${20 + i * 15}px rgba(59, 130, 246, ${0.15 - i * 0.04})`,
                 }}
