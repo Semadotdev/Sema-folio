@@ -97,6 +97,7 @@ function LogoMesh({ onClick }: { onClick: () => void }) {
   const handleClick = useCallback(
     (e: any) => {
       e.stopPropagation();
+      e.nativeEvent?.stopPropagation();
       spinBoost.current = 15;
       onClick();
     },
