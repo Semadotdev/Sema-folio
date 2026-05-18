@@ -48,6 +48,9 @@ interface ContentContextType {
   removeProject: (id: string) => void;
   lock: () => void;
   saving: boolean;
+  loaded: boolean;
+  preloaderDone: boolean;
+  setPreloaderDone: (v: boolean) => void;
   saveToServer: () => Promise<void>;
 }
 
@@ -92,6 +95,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
   const [passwordPromptOpen, setPasswordPromptOpen] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [serverLoaded, setServerLoaded] = useState(false);
+  const [preloaderDone, setPreloaderDone] = useState(false);
   const [saving, setSaving] = useState(false);
   const adminPasswordRef = useRef("");
 
@@ -250,6 +254,9 @@ export function ContentProvider({ children }: { children: ReactNode }) {
         removeProject,
         lock,
         saving,
+        loaded,
+        preloaderDone,
+        setPreloaderDone,
         saveToServer,
       }}
     >

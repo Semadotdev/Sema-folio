@@ -4,6 +4,7 @@ import { useRef, useMemo, useCallback, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useTexture, ContactShadows, Sparkles } from "@react-three/drei";
 import * as THREE from "three";
+import { useContent } from "@/context/ContentContext";
 
 function createDisplacedGeometry(
   texture: THREE.Texture,
@@ -45,7 +46,7 @@ function createDisplacedGeometry(
   return geo;
 }
 
-function LogoMesh({ onClick }: { onClick: () => void }) {
+function LogoMesh({ onClick, preloaderDone }: { onClick: () => void; preloaderDone: boolean }) {
   const meshRef = useRef<THREE.Mesh>(null);
   const glowRef = useRef<THREE.Mesh>(null);
   const groupRef = useRef<THREE.Group>(null);
@@ -113,7 +114,7 @@ function LogoMesh({ onClick }: { onClick: () => void }) {
 
     // ---- DRAMATIC ENTRANCE: falling star ----
     if (!entranceDone.current) {
-      entranceTimer.current += delta;
+      if (preloaderDone) entranceTimer.current += delta;
       const et = entranceTimer.current;
       const duration = 1.3;
       const progress = Math.min(1, et / duration);
@@ -241,6 +242,7 @@ function LogoMesh({ onClick }: { onClick: () => void }) {
 }
 
 export default function Logo3D({ onClick }: { onClick: () => void }) {
+  const { preloaderDone } = useContent();
   return (
     <div className="w-40 h-40 mx-auto cursor-pointer relative z-10" style={{ touchAction: 'manipulation' }}>
       <Canvas
@@ -256,7 +258,7 @@ export default function Logo3D({ onClick }: { onClick: () => void }) {
           intensity={0.7}
           color="#818cf8"
         />
-        <LogoMesh onClick={onClick} />
+        <LogoMesh onClick={onClick} preloaderDone={preloaderDone} />
         <ContactShadows
           position={[0, -1.2, 0]}
           opacity={0.2}

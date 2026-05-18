@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ContentProvider } from "@/context/ContentContext";
+import Preloader from "@/components/Preloader";
 import ChatButton from "@/components/ChatButton";
 import AdminPanel from "@/components/AdminPanel";
 
@@ -39,6 +40,7 @@ export default function RootLayout({
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body className="min-h-screen bg-background text-foreground font-sans antialiased">
         <ContentProvider>
+          <Preloader />
           {children}
           <ChatButton />
           <AdminPanel />
