@@ -8,7 +8,7 @@ import { marked } from "marked";
 export default function About() {
   const { content } = useContent();
   return (
-    <section id="about" className="py-24 px-6">
+    <section id="about" className="py-24 px-6 overflow-hidden">
       <div className="mx-auto max-w-6xl">
         <motion.div
           initial={{ opacity: 0 }}
