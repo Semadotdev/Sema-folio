@@ -73,8 +73,8 @@ export default function Timeline() {
                 index % 2 === 0 ? "md:pr-12 md:ml-0" : "md:pl-12 md:ml-auto"
               } mb-12 last:mb-0`}
             >
-              <div className={`absolute left-4 md:left-auto w-3 h-3 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 ${
-                index % 2 === 0 ? "md:right-[-6.5px]" : "md:left-[-6.5px]"
+              <div className={`absolute left-4 w-3 h-3 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 ${
+                index % 2 === 0 ? "md:left-auto md:right-[-6px]" : "md:left-[-6px]"
               } top-1`} />
 
               <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 hover:border-zinc-700 transition-colors">

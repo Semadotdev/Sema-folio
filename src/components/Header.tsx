@@ -18,19 +18,26 @@ export default function Header() {
   const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      setScrollProgress(docHeight > 0 ? Math.min(scrollTop / docHeight, 1) : 0);
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const scrollTop = window.scrollY;
+          const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+          setScrollProgress(docHeight > 0 ? Math.min(scrollTop / docHeight, 1) : 0);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
       <div
-        className="absolute top-0 left-0 h-[2px] bg-gradient-to-r from-blue-500 via-indigo-400 to-cyan-400 transition-all duration-150"
+        className="absolute top-0 left-0 h-[2px] bg-gradient-to-r from-blue-500 via-indigo-400 to-cyan-400"
         style={{ width: `${scrollProgress * 100}%` }}
       />
       <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
