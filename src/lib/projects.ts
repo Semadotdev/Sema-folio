@@ -9,7 +9,7 @@ export interface Project {
   readmeUrl?: string;
 }
 
-function slugify(text: string): string {
+export function slugify(text: string): string {
   return text
     .toLowerCase()
     .replace(/[^\w\s-]/g, "")
