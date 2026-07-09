@@ -1,3 +1,5 @@
+import { inline as mdInline } from "@/components/Md";
+
 interface Props {
   items: string[];
 }
@@ -13,7 +15,7 @@ export default function FeaturesCell({ items }: Props) {
           <span className="w-5 h-5 rounded bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center text-white text-[10px] font-bold mt-0.5 shrink-0">
             ✦
           </span>
-          <span className="text-zinc-300 text-sm leading-relaxed">{item}</span>
+          <span className="text-zinc-300 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: mdInline(item) }} />
         </div>
       ))}
     </div>

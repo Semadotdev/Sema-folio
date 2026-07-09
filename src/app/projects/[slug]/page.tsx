@@ -17,6 +17,7 @@ import TechStackCell from "@/components/projects/TechStackCell";
 import FeaturesCell from "@/components/projects/FeaturesCell";
 import QuickStartCell from "@/components/projects/QuickStartCell";
 import ProjectStructureCell from "@/components/projects/ProjectStructureCell";
+import { block as mdBlock, inline as mdInline } from "@/components/Md";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -105,11 +106,22 @@ export default async function ProjectPage({ params }: Props) {
           {quickStart &&
             (() => {
               const items = extractListItems(quickStart.content);
-              const steps = items.length > 0 ? items : [quickStart.content];
+              if (items.length > 0) {
+                return (
+                  <div className="md:col-span-2">
+                    <BentoCell title="Quick Start">
+                      <QuickStartCell steps={items} />
+                    </BentoCell>
+                  </div>
+                );
+              }
               return (
                 <div className="md:col-span-2">
                   <BentoCell title="Quick Start">
-                    <QuickStartCell steps={steps} />
+                    <div
+                      className="prose prose-invert prose-sm max-w-none text-zinc-300 [&_strong]:text-zinc-100 [&_code]:text-blue-300 [&_code]:bg-zinc-800 [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_pre]:bg-zinc-800 [&_pre]:p-4 [&_pre]:rounded-xl [&_pre]:border [&_pre]:border-zinc-700 [&_a]:text-blue-400 [&_a:hover]:text-blue-300 [&_blockquote]:border-l-blue-500 [&_blockquote]:text-zinc-400 [&_h3]:text-zinc-200 [&_h3]:text-base [&_h3]:font-semibold [&_h3]:mt-6 [&_h3]:mb-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5"
+                      dangerouslySetInnerHTML={{ __html: mdBlock(quickStart.content) }}
+                    />
                   </BentoCell>
                 </div>
               );
@@ -133,7 +145,10 @@ export default async function ProjectPage({ params }: Props) {
             .map((section, i) => (
               <div key={`generic-${i}`} className="md:col-span-2">
                 <BentoCell title={section.title}>
-                  <RenderGeneric content={section.content} />
+                  <div
+                    className="prose prose-invert prose-sm max-w-none text-zinc-300 [&_strong]:text-zinc-100 [&_code]:text-blue-300 [&_code]:bg-zinc-800 [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_pre]:bg-zinc-800 [&_pre]:p-4 [&_pre]:rounded-xl [&_pre]:border [&_pre]:border-zinc-700 [&_a]:text-blue-400 [&_a:hover]:text-blue-300 [&_blockquote]:border-l-blue-500 [&_blockquote]:text-zinc-400 [&_h3]:text-zinc-200 [&_h3]:text-base [&_h3]:font-semibold [&_h3]:mt-6 [&_h3]:mb-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5"
+                    dangerouslySetInnerHTML={{ __html: mdBlock(section.content) }}
+                  />
                 </BentoCell>
               </div>
             ))}
@@ -149,41 +164,4 @@ export default async function ProjectPage({ params }: Props) {
   );
 }
 
-function RenderGeneric({ content }: { content: string }) {
-  const lines = content.trim().split("\n").filter(Boolean);
-  if (lines.length === 0) return null;
 
-  return (
-    <div className="space-y-3">
-      {lines.map((line, i) => {
-        const trimmed = line.trim();
-        if (trimmed.startsWith("```")) return null;
-        if (trimmed.startsWith("|") && trimmed.endsWith("|")) {
-          return (
-            <p key={i} className="text-zinc-400 text-sm font-mono">
-              {trimmed}
-            </p>
-          );
-        }
-        if (trimmed.startsWith("- ")) {
-          return (
-            <div key={i} className="flex items-start gap-2">
-              <span className="text-blue-400/60 mt-1 shrink-0">•</span>
-              <span className="text-zinc-300 text-sm">
-                {trimmed.replace(/^- /, "")}
-              </span>
-            </div>
-          );
-        }
-        if (/^\[!\[/.test(trimmed)) {
-          return null;
-        }
-        return (
-          <p key={i} className="text-zinc-400 text-sm leading-relaxed">
-            {trimmed}
-          </p>
-        );
-      })}
-    </div>
-  );
-}

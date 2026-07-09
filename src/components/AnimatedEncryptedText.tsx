@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { inline as mdInline } from "@/components/Md";
 
 const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
 
@@ -51,14 +52,14 @@ export default function AnimatedEncryptedText({ text }: Props) {
   const hasEncrypted = segments.some((s) => s.type === "encrypted");
 
   if (!hasEncrypted) {
-    return <>{text}</>;
+    return <span dangerouslySetInnerHTML={{ __html: mdInline(text) }} />;
   }
 
   return (
     <>
       {segments.map((segment, i) => {
         if (segment.type === "text") {
-          return <span key={i}>{segment.value}</span>;
+          return <span key={i} dangerouslySetInnerHTML={{ __html: mdInline(segment.value) }} />;
         }
         return <EncryptedBlock key={i} length={segment.value.length} />;
       })}
