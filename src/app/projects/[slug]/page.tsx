@@ -123,18 +123,20 @@ export default async function ProjectPage({ params }: Props) {
               const tree = projectStructure ? extractCodeBlock(projectStructure.content) : null;
               if (!tree && !license) return null;
               return (
-                <div className="md:col-span-1">
-                  <BentoCell title="Project Structure">
-                    {tree && <ProjectStructureCell tree={tree} />}
-                    {license && (
-                      <div className={tree ? "mt-6 pt-6 border-t border-zinc-800" : ""}>
-                        <div
-                          className={proseBase}
-                          dangerouslySetInnerHTML={{ __html: mdBlock(license.content) }}
-                        />
-                      </div>
-                    )}
-                  </BentoCell>
+                <div className="md:col-span-1 flex flex-col gap-0">
+                  {tree && (
+                    <BentoCell title="Project Structure" className="!rounded-b-none">
+                      <ProjectStructureCell tree={tree} />
+                    </BentoCell>
+                  )}
+                  {license && (
+                    <BentoCell title="License" className="!rounded-t-none !border-t-0" accent={false}>
+                      <div
+                        className={proseBase}
+                        dangerouslySetInnerHTML={{ __html: mdBlock(license.content) }}
+                      />
+                    </BentoCell>
+                  )}
                 </div>
               );
             })()}
