@@ -83,9 +83,9 @@ function EncryptedBlock({ length }: { length: number }) {
             next[i] = randomChar();
             return next;
           });
-        }, 120);
+        }, 2000);
         intervals.push(id);
-      }, i * 80);
+      }, i * 200);
       timeouts.push(timeout);
     }
 
@@ -96,7 +96,7 @@ function EncryptedBlock({ length }: { length: number }) {
   }, [length]);
 
   return (
-    <span className="text-blue-400">
+    <span className="text-blue-400 font-mono">
       {chars.map((char, i) => (
         <span key={i}>{char}</span>
       ))}
