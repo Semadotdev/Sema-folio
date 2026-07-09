@@ -118,29 +118,26 @@ export default async function ProjectPage({ params }: Props) {
               );
             })()}
 
-          {projectStructure &&
+          {(projectStructure || license) &&
             (() => {
-              const tree = extractCodeBlock(projectStructure.content);
-              if (!tree) return null;
+              const tree = projectStructure ? extractCodeBlock(projectStructure.content) : null;
+              if (!tree && !license) return null;
               return (
                 <div className="md:col-span-1">
                   <BentoCell title="Project Structure">
-                    <ProjectStructureCell tree={tree} />
+                    {tree && <ProjectStructureCell tree={tree} />}
+                    {license && (
+                      <div className={tree ? "mt-6 pt-6 border-t border-zinc-800" : ""}>
+                        <div
+                          className={proseBase}
+                          dangerouslySetInnerHTML={{ __html: mdBlock(license.content) }}
+                        />
+                      </div>
+                    )}
                   </BentoCell>
                 </div>
               );
             })()}
-
-          {license && (
-            <div className="md:col-span-1 md:col-start-2">
-              <BentoCell title={license.title}>
-                <div
-                  className={proseBase}
-                  dangerouslySetInnerHTML={{ __html: mdBlock(license.content) }}
-                />
-              </BentoCell>
-            </div>
-          )}
 
           {quickStart &&
             (() => {
