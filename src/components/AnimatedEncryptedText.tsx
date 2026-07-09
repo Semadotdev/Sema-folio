@@ -68,11 +68,11 @@ export default function AnimatedEncryptedText({ text }: Props) {
 }
 
 function EncryptedBlock({ length }: { length: number }) {
-  const [chars, setChars] = useState<string[]>(() =>
-    Array.from({ length }, () => randomChar())
-  );
+  const [chars, setChars] = useState<string[] | null>(null);
 
   useEffect(() => {
+    setChars(Array.from({ length }, () => randomChar()));
+
     const intervals: number[] = [];
     const timeouts: number[] = [];
 
@@ -80,6 +80,7 @@ function EncryptedBlock({ length }: { length: number }) {
       const timeout = window.setTimeout(() => {
         const id = window.setInterval(() => {
           setChars((prev) => {
+            if (!prev) return prev;
             const next = [...prev];
             next[i] = randomChar();
             return next;
@@ -95,6 +96,10 @@ function EncryptedBlock({ length }: { length: number }) {
       intervals.forEach(clearInterval);
     };
   }, [length]);
+
+  if (!chars) {
+    return <span className="text-blue-400 font-mono">{Array(length).fill("█").join("")}</span>;
+  }
 
   return (
     <span className="text-blue-400 font-mono">
