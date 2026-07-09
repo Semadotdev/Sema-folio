@@ -156,16 +156,19 @@ export default async function ProjectPage({ params }: Props) {
 
           {sections
             .filter((s) => s.type === "generic")
-            .map((section, i) => (
-              <div key={`generic-${i}`} className="md:col-span-2">
-                <BentoCell title={section.title}>
-                  <div
-                    className={proseBase}
-                      dangerouslySetInnerHTML={{ __html: mdBlock(section.content) }}
-                  />
-                </BentoCell>
-              </div>
-            ))}
+            .map((section, i) => {
+              const isNarrow = /^(license|need help)/i.test(section.title);
+              return (
+                <div key={`generic-${i}`} className={isNarrow ? "md:col-span-1" : "md:col-span-2"}>
+                  <BentoCell title={section.title}>
+                    <div
+                      className={proseBase}
+                        dangerouslySetInnerHTML={{ __html: mdBlock(section.content) }}
+                    />
+                  </BentoCell>
+                </div>
+              );
+            })}
         </BentoGrid>
       ) : (
         <div className="text-center py-16">
