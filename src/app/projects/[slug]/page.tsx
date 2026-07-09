@@ -17,6 +17,7 @@ import TechStackCell from "@/components/projects/TechStackCell";
 import FeaturesCell from "@/components/projects/FeaturesCell";
 import QuickStartCell from "@/components/projects/QuickStartCell";
 import ProjectStructureCell from "@/components/projects/ProjectStructureCell";
+import ProjectBackground from "@/components/projects/ProjectBackground";
 import { block as mdBlock, inline as mdInline } from "@/components/Md";
 
 interface Props {
@@ -56,7 +57,7 @@ export default async function ProjectPage({ params }: Props) {
   const projectStructure = sections.find((s) => s.type === "projectStructure");
 
   return (
-    <div className="max-w-5xl mx-auto px-6">
+    <div className="max-w-5xl mx-auto px-6 relative z-10">
       <a
         href="/#projects"
         className="inline-flex items-center gap-1.5 text-sm text-zinc-500 hover:text-white transition-colors mb-8"
@@ -76,6 +77,7 @@ export default async function ProjectPage({ params }: Props) {
 
       <ProjectHero project={project} />
 
+      <ProjectBackground slug={slug} />
       {sections.length > 0 ? (
         <BentoGrid>
           {features &&
