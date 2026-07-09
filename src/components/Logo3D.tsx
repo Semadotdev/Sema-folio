@@ -46,7 +46,7 @@ function createDisplacedGeometry(
   return geo;
 }
 
-let hasPlayedEntrance = false;
+let hasPlayedEntrance = true;
 
 function LogoMesh({ onClick, preloaderDone }: { onClick: () => void; preloaderDone: boolean }) {
   const meshRef = useRef<THREE.Mesh>(null);
