@@ -66,6 +66,7 @@ export default async function ProjectPage({ params }: Props) {
   const features = sections.filter((s) => s.type === "features");
   const quickStart = sections.find((s) => s.type === "quickStart");
   const projectStructure = sections.find((s) => s.type === "projectStructure");
+  const license = sections.find((s) => s.type === "generic" && /^license/i.test(s.title));
 
   return (
     <div className="max-w-5xl mx-auto px-6 relative z-10">
@@ -130,6 +131,17 @@ export default async function ProjectPage({ params }: Props) {
               );
             })()}
 
+          {license && (
+            <div className="md:col-span-1 md:col-start-2">
+              <BentoCell title={license.title}>
+                <div
+                  className={proseBase}
+                  dangerouslySetInnerHTML={{ __html: mdBlock(license.content) }}
+                />
+              </BentoCell>
+            </div>
+          )}
+
           {quickStart &&
             (() => {
               const items = extractListItems(quickStart.content);
@@ -155,9 +167,9 @@ export default async function ProjectPage({ params }: Props) {
             })()}
 
           {sections
-            .filter((s) => s.type === "generic")
+            .filter((s) => s.type === "generic" && !/^license/i.test(s.title))
             .map((section, i) => {
-              const isNarrow = /^(license|need help)/i.test(section.title);
+              const isNarrow = /^need help/i.test(section.title);
               return (
                 <div key={`generic-${i}`} className={isNarrow ? "md:col-span-1" : "md:col-span-2"}>
                   <BentoCell title={section.title}>
