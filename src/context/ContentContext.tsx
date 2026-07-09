@@ -10,11 +10,19 @@ export interface UserProject {
   github?: string;
   demo?: string;
   favicon?: string;
+  readmeUrl?: string;
 }
 
 export interface SkillCategory {
   title: string;
   skills: string[];
+}
+
+export interface TimelineEntry {
+  role: string;
+  company: string;
+  period: string;
+  description: string;
 }
 
 export interface EditableContent {
@@ -30,6 +38,9 @@ export interface EditableContent {
   skills: SkillCategory[];
   contact: {
     tagline: string;
+  };
+  timeline: {
+    entries: TimelineEntry[];
   };
 }
 
@@ -47,16 +58,17 @@ interface ContentContextType {
   addProject: (project: UserProject) => void;
   removeProject: (id: string) => void;
   lock: () => void;
+  discardChanges: (snapshot: { content: EditableContent; userProjects: UserProject[] }) => void;
   saving: boolean;
   loaded: boolean;
   preloaderDone: boolean;
   setPreloaderDone: (v: boolean) => void;
-  saveToServer: () => Promise<void>;
+  saveToServer: () => Promise<boolean>;
 }
 
 const STORAGE_KEY = "sema-folio-content";
 const PROJECTS_KEY = "sema-folio-projects";
-const CONTENT_VERSION = 2;
+const CONTENT_VERSION = 3;
 const VERSION_KEY = "sema-folio-content-version";
 
 const defaultContent: EditableContent = {
@@ -82,6 +94,28 @@ const defaultContent: EditableContent = {
   contact: {
     tagline:
       "Have a project in mind? Let's work together to bring your ideas to life.",
+  },
+  timeline: {
+    entries: [
+      {
+        role: "Bachelor of Science in Information Technology",
+        company: "Pamantasan ng Lungsod ng San Pablo",
+        period: "2022 - 2026",
+        description: "Pursued a Bachelor's in Information Technology with a focus on software engineering, web technologies, and data science.",
+      },
+      {
+        role: "Secondary Education",
+        company: "St. Joseph School, San Pablo City",
+        period: "2016 - 2022",
+        description: "Completed secondary education with a strong foundation in science and mathematics.",
+      },
+      {
+        role: "Elementary Education",
+        company: "Alaminos Elementary School",
+        period: "2015 - 2016",
+        description: "Completed basic education with a focus on foundational learning.",
+      },
+    ],
   },
 };
 
@@ -156,11 +190,11 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     if (loaded) localStorage.setItem(PROJECTS_KEY, JSON.stringify(userProjects));
   }, [userProjects, loaded]);
 
-  const saveToServer = useCallback(async () => {
-    if (!adminPasswordRef.current) return;
+  const saveToServer = useCallback(async (): Promise<boolean> => {
+    if (!adminPasswordRef.current) return false;
     setSaving(true);
     try {
-      await fetch("/api/admin/content", {
+      const res = await fetch("/api/admin/content", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -168,8 +202,9 @@ export function ContentProvider({ children }: { children: ReactNode }) {
         },
         body: JSON.stringify({ content, userProjects }),
       });
+      return res.ok;
     } catch {
-      // silently fail
+      return false;
     } finally {
       setSaving(false);
     }
@@ -237,6 +272,11 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     setUserProjects((prev) => prev.filter((p) => p.id !== id));
   }, []);
 
+  const discardChanges = useCallback((snapshot: { content: EditableContent; userProjects: UserProject[] }) => {
+    setContent(snapshot.content);
+    setUserProjects(snapshot.userProjects);
+  }, []);
+
   return (
     <ContentContext.Provider
       value={{
@@ -253,6 +293,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
         addProject,
         removeProject,
         lock,
+        discardChanges,
         saving,
         loaded,
         preloaderDone,
