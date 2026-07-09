@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { findProjectBySlug } from "@/lib/projects";
 import {
   parseReadme,
@@ -19,6 +20,16 @@ import ProjectStructureCell from "@/components/projects/ProjectStructureCell";
 
 interface Props {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const project = findProjectBySlug(slug);
+  if (!project) return { title: "Project Not Found" };
+  return {
+    title: project.title,
+    description: project.description,
+  };
 }
 
 export default async function ProjectPage({ params }: Props) {
@@ -66,13 +77,18 @@ export default async function ProjectPage({ params }: Props) {
 
       {sections.length > 0 ? (
         <BentoGrid>
-          {features && (
-            <div className="md:col-span-1 md:row-span-2">
-              <BentoCell title="Features">
-                <FeaturesCell items={extractListItems(features.content)} />
-              </BentoCell>
-            </div>
-          )}
+          {features &&
+            (() => {
+              const items = extractListItems(features.content);
+              if (items.length === 0) return null;
+              return (
+                <div className="md:col-span-1 md:row-span-2">
+                  <BentoCell title="Features">
+                    <FeaturesCell items={items} />
+                  </BentoCell>
+                </div>
+              );
+            })()}
           {techStack &&
             (() => {
               const table = extractTable(techStack.content);
