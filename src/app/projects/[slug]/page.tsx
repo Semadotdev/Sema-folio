@@ -117,6 +117,19 @@ export default async function ProjectPage({ params }: Props) {
               );
             })()}
 
+          {projectStructure &&
+            (() => {
+              const tree = extractCodeBlock(projectStructure.content);
+              if (!tree) return null;
+              return (
+                <div className="md:col-span-1">
+                  <BentoCell title="Project Structure">
+                    <ProjectStructureCell tree={tree} />
+                  </BentoCell>
+                </div>
+              );
+            })()}
+
           {quickStart &&
             (() => {
               const items = extractListItems(quickStart.content);
@@ -136,19 +149,6 @@ export default async function ProjectPage({ params }: Props) {
                       className={proseBase}
                       dangerouslySetInnerHTML={{ __html: mdBlock(quickStart.content) }}
                     />
-                  </BentoCell>
-                </div>
-              );
-            })()}
-
-          {projectStructure &&
-            (() => {
-              const tree = extractCodeBlock(projectStructure.content);
-              if (!tree) return null;
-              return (
-                <div className="md:col-span-1">
-                  <BentoCell title="Project Structure">
-                    <ProjectStructureCell tree={tree} />
                   </BentoCell>
                 </div>
               );
