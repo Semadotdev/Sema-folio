@@ -5,6 +5,7 @@ import Link from "next/link";
 import { defaultProjects, defaultTitles, slugify } from "@/lib/projects";
 import type { Project } from "@/lib/projects";
 import ProjectHoverEffect from "./ProjectHoverEffect";
+import AnimatedEncryptedText from "./AnimatedEncryptedText";
 
 export default function Projects() {
   const { userProjects } = useContent();
@@ -81,7 +82,7 @@ export default function Projects() {
                       </button>
                     )}
                   </div>
-                  <p className="text-zinc-400 text-sm leading-relaxed mb-4">{project.description}</p>
+                  <p className="text-zinc-400 text-sm leading-relaxed mb-4"><AnimatedEncryptedText text={project.description} /></p>
                   <div className="flex flex-wrap gap-2">
                     {project.tags.map((tag) => (
                       <span
