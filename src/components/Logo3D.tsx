@@ -46,6 +46,8 @@ function createDisplacedGeometry(
   return geo;
 }
 
+let hasPlayedEntrance = false;
+
 function LogoMesh({ onClick, preloaderDone }: { onClick: () => void; preloaderDone: boolean }) {
   const meshRef = useRef<THREE.Mesh>(null);
   const glowRef = useRef<THREE.Mesh>(null);
@@ -57,7 +59,7 @@ function LogoMesh({ onClick, preloaderDone }: { onClick: () => void; preloaderDo
   const timeRef = useRef(0);
   const spinBoost = useRef(1);
 
-  const entranceDone = useRef(false);
+  const entranceDone = useRef(hasPlayedEntrance);
   const entranceTimer = useRef(0);
 
   const displacedGeo = useMemo(
@@ -152,6 +154,7 @@ function LogoMesh({ onClick, preloaderDone }: { onClick: () => void; preloaderDo
 
       if (progress >= 1) {
         entranceDone.current = true;
+        hasPlayedEntrance = true;
         scaleRef.current = 1;
         rotSpeedRef.current = 0.006;
         if (groupRef.current) groupRef.current.position.y = 0;

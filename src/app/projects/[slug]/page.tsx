@@ -1,3 +1,14 @@
+const proseBase =
+  "prose prose-invert prose-sm max-w-none text-zinc-300 " +
+  "[&_strong]:text-zinc-100 [&_code]:text-blue-300 [&_code]:bg-zinc-800 [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded " +
+  "[&_pre]:bg-zinc-800 [&_pre]:p-4 [&_pre]:rounded-xl [&_pre]:border [&_pre]:border-zinc-700 " +
+  "[&_a]:text-blue-400 [&_a:hover]:text-blue-300 " +
+  "[&_blockquote]:border-l-blue-500 [&_blockquote]:text-zinc-400 " +
+  "[&_h3]:text-zinc-200 [&_h3]:text-base [&_h3]:font-semibold [&_h3]:mt-6 [&_h3]:mb-2 " +
+  "[&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 " +
+  "[&_table]:w-full [&_th]:text-left [&_th]:text-blue-400 [&_th]:text-xs [&_th]:font-mono [&_th]:uppercase [&_th]:pb-2 [&_th]:pr-4 " +
+  "[&_td]:text-zinc-300 [&_td]:text-sm [&_td]:py-1.5 [&_td]:pr-4 [&_td]:border-b [&_td]:border-zinc-800";
+
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { findProjectBySlug } from "@/lib/projects";
@@ -52,7 +63,7 @@ export default async function ProjectPage({ params }: Props) {
   }
 
   const techStack = sections.find((s) => s.type === "techStack");
-  const features = sections.find((s) => s.type === "features");
+  const features = sections.filter((s) => s.type === "features");
   const quickStart = sections.find((s) => s.type === "quickStart");
   const projectStructure = sections.find((s) => s.type === "projectStructure");
 
@@ -80,13 +91,14 @@ export default async function ProjectPage({ params }: Props) {
       <ProjectBackground slug={slug} />
       {sections.length > 0 ? (
         <BentoGrid>
-          {features &&
+          {features.length > 0 &&
             (() => {
-              const items = extractListItems(features.content);
+              const items = features.flatMap((s) => extractListItems(s.content));
               if (items.length === 0) return null;
+              const title = features.length > 1 ? `${features[0].title} & ${features.slice(1).length} More` : features[0].title;
               return (
                 <div className="md:col-span-1 md:row-span-2">
-                  <BentoCell title="Features">
+                  <BentoCell title={title}>
                     <FeaturesCell items={items} />
                   </BentoCell>
                 </div>
@@ -121,7 +133,7 @@ export default async function ProjectPage({ params }: Props) {
                 <div className="md:col-span-2">
                   <BentoCell title="Quick Start">
                     <div
-                      className="prose prose-invert prose-sm max-w-none text-zinc-300 [&_strong]:text-zinc-100 [&_code]:text-blue-300 [&_code]:bg-zinc-800 [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_pre]:bg-zinc-800 [&_pre]:p-4 [&_pre]:rounded-xl [&_pre]:border [&_pre]:border-zinc-700 [&_a]:text-blue-400 [&_a:hover]:text-blue-300 [&_blockquote]:border-l-blue-500 [&_blockquote]:text-zinc-400 [&_h3]:text-zinc-200 [&_h3]:text-base [&_h3]:font-semibold [&_h3]:mt-6 [&_h3]:mb-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5"
+                      className={proseBase}
                       dangerouslySetInnerHTML={{ __html: mdBlock(quickStart.content) }}
                     />
                   </BentoCell>
@@ -148,8 +160,8 @@ export default async function ProjectPage({ params }: Props) {
               <div key={`generic-${i}`} className="md:col-span-2">
                 <BentoCell title={section.title}>
                   <div
-                    className="prose prose-invert prose-sm max-w-none text-zinc-300 [&_strong]:text-zinc-100 [&_code]:text-blue-300 [&_code]:bg-zinc-800 [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_pre]:bg-zinc-800 [&_pre]:p-4 [&_pre]:rounded-xl [&_pre]:border [&_pre]:border-zinc-700 [&_a]:text-blue-400 [&_a:hover]:text-blue-300 [&_blockquote]:border-l-blue-500 [&_blockquote]:text-zinc-400 [&_h3]:text-zinc-200 [&_h3]:text-base [&_h3]:font-semibold [&_h3]:mt-6 [&_h3]:mb-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5"
-                    dangerouslySetInnerHTML={{ __html: mdBlock(section.content) }}
+                    className={proseBase}
+                      dangerouslySetInnerHTML={{ __html: mdBlock(section.content) }}
                   />
                 </BentoCell>
               </div>
