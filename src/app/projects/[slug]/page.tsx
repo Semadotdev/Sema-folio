@@ -171,7 +171,7 @@ export default async function ProjectPage({ params }: Props) {
               <div key={`generic-${i}`} className="md:col-span-2">
                 <BentoCell title={section.title}>
                   <div
-                    className={proseBase}
+                    className={`${proseBase} ${section.title === "Need help?" ? "text-center" : ""}`}
                       dangerouslySetInnerHTML={{ __html: mdBlock(section.content) }}
                   />
                 </BentoCell>
