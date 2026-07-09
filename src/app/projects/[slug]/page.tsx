@@ -97,7 +97,7 @@ export default async function ProjectPage({ params }: Props) {
               if (items.length === 0) return null;
               const title = features.length > 1 ? `${features[0].title} & ${features.slice(1).length} More` : features[0].title;
               return (
-                <div className="md:col-span-1 md:row-span-2">
+                <div className="md:col-span-2">
                   <BentoCell title={title}>
                     <FeaturesCell items={items} />
                   </BentoCell>
@@ -109,7 +109,7 @@ export default async function ProjectPage({ params }: Props) {
               const table = extractTable(techStack.content);
               if (!table) return null;
               return (
-                <div className="md:col-span-1 md:row-span-2">
+                <div className="md:col-span-1">
                   <BentoCell title="Tech Stack">
                     <TechStackCell rows={table.rows} />
                   </BentoCell>
@@ -146,7 +146,7 @@ export default async function ProjectPage({ params }: Props) {
               const tree = extractCodeBlock(projectStructure.content);
               if (!tree) return null;
               return (
-                <div className="md:col-span-2">
+                <div className="md:col-span-1">
                   <BentoCell title="Project Structure">
                     <ProjectStructureCell tree={tree} />
                   </BentoCell>
