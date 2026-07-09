@@ -1,4 +1,8 @@
-export default function QuickStartCell({ steps }: { steps: string[] }) {
+interface Props {
+  steps: string[];
+}
+
+export default function QuickStartCell({ steps }: Props) {
   return (
     <div className="grid sm:grid-cols-2 gap-3">
       {steps.map((step, i) => (

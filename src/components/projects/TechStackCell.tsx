@@ -1,9 +1,8 @@
 interface Props {
-  headers: string[];
   rows: string[][];
 }
 
-export default function TechStackCell({ headers, rows }: Props) {
+export default function TechStackCell({ rows }: Props) {
   return (
     <div className="space-y-3">
       {rows.map((row, i) => (
