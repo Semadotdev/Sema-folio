@@ -4,6 +4,7 @@ import { useContent } from "@/context/ContentContext";
 import Link from "next/link";
 import { defaultProjects, defaultTitles, slugify } from "@/lib/projects";
 import type { Project } from "@/lib/projects";
+import ProjectHoverEffect from "./ProjectHoverEffect";
 
 export default function Projects() {
   const { userProjects } = useContent();
@@ -97,6 +98,14 @@ export default function Projects() {
 
             return (
               <div key={project.title} className="group relative rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 hover:border-zinc-700 transition-all hover:-translate-y-1 cursor-pointer">
+                {!isUserAdded && (
+                  <>
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/5 to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="absolute inset-0 rounded-2xl overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <ProjectHoverEffect title={project.title} />
+                    </div>
+                  </>
+                )}
                 {hasDetailPage ? (
                   <Link href={`/projects/${project.slug}`} className="block">
                     {cardContent}
