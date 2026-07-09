@@ -1,169 +1,25 @@
 "use client";
 
-import { useState, useEffect, useRef, type MouseEvent } from "react";
-import { motion } from "framer-motion";
 import { useContent } from "@/context/ContentContext";
-import ProjectModal from "./ProjectModal";
-import ProjectHoverEffect from "./ProjectHoverEffect";
-import { marked } from "marked";
-
-interface Project {
-  title: string;
-  description: string;
-  tags: string[];
-  github?: string;
-  demo?: string;
-  favicon?: string;
-  readmeUrl?: string;
-}
-
-const defaultProjects: Project[] = [
-  {
-    title: "Luna AI",
-    description: "A celestial-themed AI chat app with Supabase auth, streaming Groq API responses, voice input, file attachments, and constellation folders for session management.",
-    tags: ["Groq AI", "Supabase", "Express", "Vanilla JS"],
-    github: "https://github.com/Semadotdev/luna-ai",
-    demo: "https://luna-ai-eight-woad.vercel.app",
-    favicon: "/images/projects/luna-ai.png",
-    readmeUrl: "https://raw.githubusercontent.com/Semadotdev/luna-ai/main/README.md",
-  },
-  {
-    title: "Baktag",
-    description: "A warehouse management system and baktag utility for ██████████████, designed to streamline inventory tracking and tag management.",
-    tags: ["PHP", "MySQL", "WMS", "Inventory", "BarTender"],
-    readmeUrl: "/projects/franklin-baker.md",
-    favicon: "/images/favicon.png",
-  },
-  {
-    title: "Quantinda",
-    description: "A smart sari-sari store Inventory and POS system designed to simplify sales tracking, inventory management, and daily store operations.",
-    tags: ["Next.js", "Prisma", "PostgreSQL", "NextAuth", "TanStack Query"],
-    github: "https://github.com/Semadotdev/Quantinda",
-    demo: "https://quantinda.vercel.app",
-    favicon: "/images/projects/quantinda.png",
-    readmeUrl: "https://raw.githubusercontent.com/Semadotdev/Quantinda/main/README.md",
-  },
-];
-
-const defaultTitles = new Set(defaultProjects.map((p) => p.title));
-
-function extractFirstParagraph(md: string): string {
-  const lines = md.split("\n");
-  const parts: string[] = [];
-  let capturing = false;
-
-  for (const line of lines) {
-    const trimmed = line.trim();
-    if (!trimmed) {
-      if (capturing) break;
-      continue;
-    }
-    if (
-      trimmed.startsWith("#") ||
-      trimmed.startsWith("```") ||
-      trimmed.startsWith("---") ||
-      trimmed.startsWith("___") ||
-      trimmed.startsWith("[![")
-    ) {
-      if (capturing) break;
-      continue;
-    }
-    capturing = true;
-    parts.push(trimmed);
-    if (parts.join(" ").length > 120) break;
-  }
-
-  return parts
-    .join(" ")
-    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
-    .trim();
-}
-
-function TiltCard({ children }: { children: React.ReactNode }) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
-    const el = ref.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = ((y - centerY) / centerY) * -5;
-    const rotateY = ((x - centerX) / centerX) * 5;
-    el.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
-    el.style.transition = "transform 0.1s ease-out";
-  };
-
-  const handleMouseLeave = () => {
-    const el = ref.current;
-    if (!el) return;
-    el.style.transform = "perspective(800px) rotateX(0deg) rotateY(0deg) scale(1)";
-    el.style.transition = "transform 0.4s ease-out";
-  };
-
-  return (
-    <div
-      ref={ref}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{ transformStyle: "preserve-3d" }}
-      className="contents"
-    >
-      {children}
-    </div>
-  );
-}
-
-const container = {
-  hidden: {},
-  show: {
-    transition: { staggerChildren: 0.15 },
-  },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 30 },
-  show: { opacity: 1, y: 0 },
-};
+import Link from "next/link";
+import { defaultProjects, defaultTitles, slugify } from "@/lib/projects";
+import type { Project } from "@/lib/projects";
 
 export default function Projects() {
   const { userProjects } = useContent();
-  const [selected, setSelected] = useState<Project | null>(null);
-  const [projectList, setProjectList] = useState<Project[]>(defaultProjects);
-
-  useEffect(() => {
-    for (const project of defaultProjects) {
-      if (project.readmeUrl) {
-        fetch(project.readmeUrl)
-          .then((res) => res.text())
-          .then((md) => {
-            const desc = extractFirstParagraph(md);
-            if (desc) {
-              setProjectList((prev) =>
-                prev.map((p) =>
-                  p.title === project.title ? { ...p, description: desc } : p
-                )
-              );
-            }
-          })
-          .catch(() => {});
-      }
-    }
-  }, []);
-
-  const allProjects = [...projectList, ...userProjects];
+  const allProjects: Project[] = [
+    ...defaultProjects,
+    ...userProjects.map((p) => ({
+      ...p,
+      slug: slugify(p.title),
+      readmeUrl: undefined,
+    })),
+  ];
 
   return (
     <section id="projects" className="py-24 px-6">
       <div className="mx-auto max-w-6xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
+        <div className="text-center mb-16">
           <p className="text-blue-400 font-mono text-sm tracking-widest uppercase mb-4">
             Featured Work
           </p>
@@ -173,33 +29,14 @@ export default function Projects() {
               Projects
             </span>
           </h2>
-        </motion.div>
+        </div>
 
-        <motion.div
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
-          className="grid sm:grid-cols-2 gap-6"
-        >
+        <div className="grid sm:grid-cols-2 gap-6">
           {allProjects.map((project) => {
             const isUserAdded = !defaultTitles.has(project.title);
-            return (
-              <motion.div
-                key={project.title}
-                variants={item}
-              >
-                <TiltCard>
-                <div
-                  onClick={() => setSelected(project)}
-                  className="group relative rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 hover:border-zinc-700 transition-all hover:-translate-y-1 cursor-pointer"
-                >
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/5 to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                {!isUserAdded && (
-                  <div className="absolute inset-0 rounded-2xl overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <ProjectHoverEffect title={project.title} />
-                  </div>
-                )}
+            const hasDetailPage = !isUserAdded || project.readmeUrl;
+            const cardContent = (
+              <>
                 <div className="relative z-10">
                   {project.favicon ? (
                     <img src={project.favicon} alt={`${project.title} icon`} className="w-10 h-10 rounded-lg mb-4 object-cover" />
@@ -241,40 +78,47 @@ export default function Projects() {
                       </a>
                     )}
                   </div>
-                  <p className="text-zinc-400 text-sm leading-relaxed mb-4" dangerouslySetInnerHTML={{ __html: marked.parseInline(project.description, { async: false }) }} />
+                  <p className="text-zinc-400 text-sm leading-relaxed mb-4">{project.description}</p>
                   <div className="flex flex-wrap gap-2">
                     {project.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="px-2 py-0.5 rounded text-xs bg-zinc-800 text-zinc-400"
+                        className="px-2 py-0.5 rounded text-xs bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white hover:scale-105 transition-all"
                       >
                         {tag}
                       </span>
                     ))}
                   </div>
-                  </div>
                 </div>
-                </TiltCard>
-              </motion.div>
+              </>
+            );
+
+            return (
+              <div key={project.title} className="group relative rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 hover:border-zinc-700 transition-all hover:-translate-y-1 cursor-pointer">
+                {hasDetailPage ? (
+                  <Link href={`/projects/${project.slug}`} className="block">
+                    {cardContent}
+                  </Link>
+                ) : (
+                  cardContent
+                )}
+              </div>
             );
           })}
 
-          <motion.div
-            variants={item}
+          <div
             className={`rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 opacity-60 ${allProjects.length % 2 === 0 ? "sm:col-span-2" : ""}`}
           >
-            <div className="w-10 h-10 rounded-lg bg-zinc-800 mb-4 flex items-center justify-center text-zinc-500 text-sm">
+            <div className="w-10 h-10 rounded-lg bg-zinc-800 mb-4 flex items-center justify-center text-zinc-500 text-lg">
               🚧
             </div>
             <h3 className="text-xl font-semibold text-zinc-400 mb-2">Projects in Progress</h3>
             <p className="text-zinc-500 text-sm leading-relaxed">
               Actively developing new projects to expand the portfolio. Check back soon for updates!
             </p>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </div>
-
-      <ProjectModal project={selected} onClose={() => setSelected(null)} />
     </section>
   );
 }
