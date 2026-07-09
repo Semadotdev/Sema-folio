@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import type { Project } from "@/lib/projects";
+import AnimatedEncryptedText from "../AnimatedEncryptedText";
 
 interface Props {
   project: Project;
@@ -66,7 +67,7 @@ export default function ProjectHero({ project }: Props) {
         </div>
       </div>
       <p className="text-zinc-400 text-base leading-relaxed max-w-3xl">
-        {project.description}
+        <AnimatedEncryptedText text={project.description} />
       </p>
       <div className="flex flex-wrap gap-2 mt-4">
         {project.tags.map((tag) => (
