@@ -1,27 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-
-const experiences = [
-  {
-    role: "Bachelor of Science in Information Technology",
-    company: "Pamantasan ng Lungsod ng San Pablo",
-    period: "2022 - Present",
-    description: "Pursuing a Bachelor's in Information Technology with a focus on software engineering, web technologies, and data science.",
-  },
-  {
-    role: "Secondary Education",
-    company: "St. Joseph School, San Pablo City",
-    period: "2016 - 2022",
-    description: "Completed secondary education with a strong foundation in science and mathematics.",
-  },
-  {
-    role: "Elementary Education",
-    company: "Alaminos Elementary School",
-    period: "2015 - 2016",
-    description: "Completed basic education with a focus on foundational learning.",
-  },
-];
+import { useContent } from "@/context/ContentContext";
 
 const container = {
   hidden: {},
@@ -36,6 +16,9 @@ const item = {
 };
 
 export default function Timeline() {
+  const { content } = useContent();
+  const entries = content.timeline.entries;
+
   return (
     <section id="experience" className="py-24 px-6">
       <div className="mx-auto max-w-4xl">
@@ -65,9 +48,9 @@ export default function Timeline() {
         >
           <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-blue-500 via-indigo-500 to-transparent" />
 
-          {experiences.map((exp, index) => (
+          {entries.map((exp, index) => (
             <motion.div
-              key={exp.role}
+              key={index}
               variants={item}
               className={`relative pl-12 md:pl-0 md:w-1/2 ${
                 index % 2 === 0 ? "md:pr-12 md:ml-0" : "md:pl-12 md:ml-auto"

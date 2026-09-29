@@ -345,6 +345,213 @@ function QuantindaTheme() {
   );
 }
 
+function generateSkyline() {
+  return Array.from({ length: 11 }, (_, i) => {
+    const s = i * 41 + 3;
+    return {
+      id: i,
+      width: 15 + Math.round(seededRandom(s) * 12),
+      height: 18 + Math.round(seededRandom(s + 1) * 44),
+      delay: parseFloat((seededRandom(s + 2) * 1.4).toFixed(4)),
+      windows: Array.from({ length: 4 }, (_, w) => {
+        const ws = i * 97 + w * 13;
+        return {
+          lit: seededRandom(ws) > 0.45,
+          delay: parseFloat((seededRandom(ws + 1) * 4).toFixed(4)),
+          top: `${20 + Math.round(seededRandom(ws + 2) * 52)}%`,
+          left: `${22 + Math.round(seededRandom(ws + 3) * 44)}%`,
+        };
+      }),
+    };
+  });
+}
+
+function AndorTheme() {
+  const [skyline] = useState(generateSkyline);
+
+  return (
+    <div className="andor-root absolute inset-0 pointer-events-none overflow-hidden">
+      <style>{`
+        @keyframes andorGridPan {
+          0% { transform: translate(0, 0); }
+          100% { transform: translate(48px, 48px); }
+        }
+        @keyframes andorLotPulse {
+          0% { transform: scale(1); opacity: 0.4; }
+          70% { transform: scale(2.2); opacity: 0; }
+          100% { transform: scale(2.2); opacity: 0; }
+        }
+        @keyframes andorScan {
+          0% { top: 0; opacity: 0; }
+          10% { opacity: 0.2; }
+          90% { opacity: 0.2; }
+          100% { top: 100%; opacity: 0; }
+        }
+        @keyframes andorWindow {
+          0%, 100% { opacity: 0.06; }
+          50% { opacity: 0.22; }
+        }
+        @keyframes andorRise {
+          0% { transform: translateY(16px); opacity: 0; }
+          100% { transform: translateY(0); opacity: 1; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .andor-root, .andor-root * { animation: none !important; }
+        }
+      `}</style>
+
+      <div
+        className="absolute"
+        style={{
+          inset: -48,
+          backgroundImage:
+            "linear-gradient(rgba(34,211,238,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.03) 1px, transparent 1px)",
+          backgroundSize: "48px 48px",
+          animation: "andorGridPan 9s linear infinite",
+        }}
+      />
+
+      <div
+        className="absolute border border-amber-300/25"
+        style={{ right: "6%", top: "14%", width: 20, height: 20 }}
+      >
+        <div
+          className="absolute inset-0 border border-amber-300/30"
+          style={{ animation: "andorLotPulse 2.8s ease-out infinite" }}
+        />
+        <span className="absolute left-1/2 top-1/2 w-[3px] h-[3px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-300/55" />
+      </div>
+
+      <div className="absolute bottom-0 left-0 right-0 flex items-end gap-px h-1/3">
+        {skyline.map((b) => (
+          <div
+            key={b.id}
+            className="relative bg-transparent border-x border-t border-cyan-400/12"
+            style={{
+              width: b.width,
+              height: `${b.height}%`,
+              animation: `andorRise 0.7s ease-out ${b.delay}s backwards`,
+            }}
+          >
+            {b.windows
+              .filter((w) => w.lit)
+              .map((w, i) => (
+                <span
+                  key={i}
+                  className="absolute w-[2px] h-[2px] bg-cyan-200/45"
+                  style={{
+                    top: w.top,
+                    left: w.left,
+                    animation: `andorWindow 3s ease-in-out ${w.delay}s infinite`,
+                  }}
+                />
+              ))}
+          </div>
+        ))}
+      </div>
+
+      <div
+        className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-300/20 to-transparent"
+        style={{ animation: "andorScan 3.5s ease-in-out infinite" }}
+      />
+    </div>
+  );
+}
+
+const VERSE_PANEL_LAYOUT = [
+  { left: "56%", top: "10%", width: "28%", height: "22%" },
+  { left: "58%", top: "62%", width: "26%", height: "20%" },
+  { left: "4%", top: "70%", width: "24%", height: "18%" },
+];
+
+function generatePanels() {
+  return VERSE_PANEL_LAYOUT.map((layout, i) => {
+    const s = i * 47 + 19;
+    return {
+      ...layout,
+      id: i,
+      drift: parseFloat((seededRandom(s) * 6 - 3).toFixed(4)),
+      delay: parseFloat((seededRandom(s + 2) * 3).toFixed(4)),
+      duration: parseFloat((seededRandom(s + 3) * 2 + 5).toFixed(4)),
+      active: i === 0,
+    };
+  });
+}
+
+function UniVerseTheme() {
+  const [panels] = useState(generatePanels);
+
+  return (
+    <div className="verse-root absolute inset-0 pointer-events-none overflow-hidden">
+      <style>{`
+        @keyframes versePanelDrift {
+          0%, 100% { transform: translate(0, 0); }
+          50% { transform: translate(var(--drift), -4px); }
+        }
+        @keyframes verseChapterGlow {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(167,139,250,0); border-color: rgba(167,139,250,0.28); }
+          50% { box-shadow: 0 0 12px 0 rgba(167,139,250,0.12); border-color: rgba(244,114,182,0.40); }
+        }
+        @keyframes verseChapterFill {
+          0% { width: 5%; }
+          60% { width: 78%; }
+          100% { width: 5%; }
+        }
+        @keyframes verseDotRun {
+          0% { left: 5%; }
+          60% { left: 78%; }
+          100% { left: 5%; }
+        }
+        @keyframes verseToneShift {
+          0% { background-size: 8px 8px; }
+          100% { background-size: 13px 13px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .verse-root, .verse-root * { animation: none !important; }
+        }
+      `}</style>
+
+      <div
+        className="absolute inset-0 opacity-[0.02]"
+        style={{
+          backgroundImage: "radial-gradient(rgba(167,139,250,0.9) 1px, transparent 1px)",
+          backgroundSize: "8px 8px",
+          animation: "verseToneShift 8s ease-in-out infinite alternate",
+        }}
+      />
+
+      {panels.map((p) => (
+        <div
+          key={p.id}
+          className="absolute rounded-[3px] bg-transparent"
+          style={{
+            left: p.left,
+            top: p.top,
+            width: p.width,
+            height: p.height,
+            border: "1px solid rgba(167,139,250,0.12)",
+            "--drift": `${p.drift}px`,
+            animation: p.active
+              ? `verseChapterGlow 2.6s ease-in-out infinite, versePanelDrift ${p.duration}s ease-in-out ${p.delay}s infinite`
+              : `versePanelDrift ${p.duration}s ease-in-out ${p.delay}s infinite`,
+          } as React.CSSProperties}
+        />
+      ))}
+
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-violet-400/15">
+        <div
+          className="absolute h-px bg-gradient-to-r from-violet-400/35 to-rose-400/35"
+          style={{ width: "5%", animation: "verseChapterFill 7s ease-in-out infinite" }}
+        />
+        <div
+          className="absolute -translate-x-1/2 -translate-y-1/2 w-1 h-1 rounded-full bg-rose-300/80"
+          style={{ animation: "verseDotRun 7s ease-in-out infinite" }}
+        />
+      </div>
+    </div>
+  );
+}
+
 function ShimmerTheme() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -364,15 +571,19 @@ function ShimmerTheme() {
   );
 }
 
-export default function ProjectHoverEffect({ title }: { title: string }) {
-  if (title.toLowerCase().includes("luna") || title.toLowerCase().includes("ai")) {
-    return <LunaTheme />;
+export default function ProjectHoverEffect({ slug }: { slug: string }) {
+  switch (slug) {
+    case "luna-ai":
+      return <LunaTheme />;
+    case "baktag":
+      return <BaktagTheme />;
+    case "quantinda":
+      return <QuantindaTheme />;
+    case "em-andor":
+      return <AndorTheme />;
+    case "uni-verse":
+      return <UniVerseTheme />;
+    default:
+      return <ShimmerTheme />;
   }
-  if (title.toLowerCase().includes("franklin") || title.toLowerCase().includes("baktag")) {
-    return <BaktagTheme />;
-  }
-  if (title.toLowerCase().includes("quantinda")) {
-    return <QuantindaTheme />;
-  }
-  return <ShimmerTheme />;
 }

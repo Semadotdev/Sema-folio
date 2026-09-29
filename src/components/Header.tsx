@@ -53,7 +53,7 @@ export default function Header() {
             <a
               key={link.href}
               href={link.href}
-              className="text-sm text-zinc-400 hover:text-white transition-colors"
+              className="relative text-sm text-zinc-400 hover:text-white transition-colors after:absolute after:bottom-[-4px] after:left-0 after:h-[1px] after:w-0 after:bg-gradient-to-r after:from-blue-400 after:to-cyan-400 after:transition-all after:duration-300 hover:after:w-full"
             >
               {link.label}
             </a>
@@ -61,7 +61,7 @@ export default function Header() {
         </nav>
 
         <button
-          className="md:hidden text-white p-2"
+          className="md:hidden text-white p-2 active:scale-90 transition-transform"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
         >

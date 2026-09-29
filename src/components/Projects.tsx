@@ -103,7 +103,7 @@ export default function Projects() {
                   <>
                     <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/5 to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                     <div className="absolute inset-0 rounded-2xl overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <ProjectHoverEffect title={project.title} />
+                      <ProjectHoverEffect slug={project.slug} />
                     </div>
                   </>
                 )}

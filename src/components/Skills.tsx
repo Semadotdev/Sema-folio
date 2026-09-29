@@ -3,6 +3,7 @@
 import { useRef, type MouseEvent } from "react";
 import { motion } from "framer-motion";
 import { useContent } from "@/context/ContentContext";
+import LogoTicker from "./LogoTicker";
 
 const container = {
   hidden: {},
@@ -90,7 +91,7 @@ export default function Skills() {
                   {category.skills.map((skill) => (
                     <span
                       key={skill}
-                      className="px-3 py-1 rounded-full text-xs bg-zinc-800 text-zinc-300 border border-zinc-700"
+                      className="px-3 py-1 rounded-full text-xs bg-zinc-800 text-zinc-300 border border-zinc-700 hover:bg-zinc-700 hover:text-white hover:scale-105 transition-all"
                     >
                       {skill}
                     </span>
@@ -100,6 +101,9 @@ export default function Skills() {
             </motion.div>
           ))}
         </motion.div>
+        <div className="mt-16">
+          <LogoTicker />
+        </div>
       </div>
     </section>
   );

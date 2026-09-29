@@ -50,6 +50,28 @@ export const defaultProjects: Project[] = [
     favicon: "/images/projects/quantinda.png",
     readmeUrl: "/projects/quantinda.md",
   },
+  {
+    title: "E.M. Andor",
+    slug: "em-andor",
+    description:
+      "A web platform for E.M. Andor Realty and Development — a public marketing site plus a role-gated back office for admins and sales agents, covering projects, lots, reservations, commission tracking, and ledger reporting, delivered as an installable PWA.",
+    tags: ["React", "Vite", "Tailwind CSS", "Supabase", "PWA"],
+    github: "https://github.com/Semadotdev/EM-Andor",
+    demo: "https://em-andor.vercel.app",
+    favicon: "/images/projects/em-andor.png",
+    readmeUrl: "/projects/em-andor.md",
+  },
+  {
+    title: "UNI-verse",
+    slug: "uni-verse",
+    description:
+      "A fast, installable manga & manhwa reader with five content providers, a personal library with folders and share links, per-chapter read tracking, and offline image caching.",
+    tags: ["Next.js", "TypeScript", "Prisma", "Supabase", "Tailwind CSS"],
+    github: "https://github.com/Semadotdev/UNI-verse",
+    demo: "https://uni-verse-six-gules.vercel.app",
+    favicon: "/images/projects/uni-verse.png",
+    readmeUrl: "/projects/uni-verse.md",
+  },
 ];
 
 export const defaultTitles = new Set(defaultProjects.map((p) => p.title));

@@ -220,6 +220,170 @@ function QuantindaBackground() {
   );
 }
 
+function AndorBackground() {
+  const [skyline] = useState(() =>
+    Array.from({ length: 22 }, (_, i) => {
+      const s = i * 43 + 5;
+      return {
+        id: i,
+        width: parseFloat((seededRandom(s) * 5 + 2).toFixed(4)),
+        height: `${(seededRandom(s + 1) * 55 + 15).toFixed(4)}%`,
+        delay: parseFloat((seededRandom(s + 2) * 5).toFixed(4)),
+        lit: seededRandom(s + 3) > 0.5,
+        window: seededRandom(s + 4) > 0.5,
+      };
+    })
+  );
+
+  return (
+    <div className="fixed inset-0 pointer-events-none overflow-hidden">
+      <style>{`
+        @keyframes bgAndorGridPan {
+          0% { transform: translate(0, 0); }
+          100% { transform: translate(64px, 64px); }
+        }
+        @keyframes bgAndorLotPulse {
+          0% { transform: scale(1); opacity: 0.2; }
+          70% { transform: scale(1.6); opacity: 0; }
+          100% { transform: scale(1.6); opacity: 0; }
+        }
+        @keyframes bgAndorWindow {
+          0%, 100% { opacity: 0.02; }
+          50% { opacity: 0.10; }
+        }
+        @keyframes bgAndorGlow {
+          0%, 100% { opacity: 0.015; }
+          50% { opacity: 0.035; }
+        }
+      `}</style>
+      <div
+        className="absolute"
+        style={{
+          inset: -64,
+          backgroundImage:
+            "linear-gradient(rgba(34,211,238,0.022) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.022) 1px, transparent 1px)",
+          backgroundSize: "64px 64px",
+          animation: "bgAndorGridPan 14s linear infinite",
+        }}
+      />
+      <div
+        className="absolute border border-amber-300/14"
+        style={{ left: "72%", top: "20%", width: 60, height: 60 }}
+      >
+        <div
+          className="absolute inset-0 border border-amber-300/18"
+          style={{ animation: "bgAndorLotPulse 5s ease-out infinite" }}
+        />
+      </div>
+      <div className="absolute bottom-0 left-0 right-0 flex items-end gap-px h-1/3">
+        {skyline.map((b) => (
+          <div
+            key={b.id}
+            className="relative bg-transparent border-x border-t border-cyan-400/[0.05]"
+            style={{ width: b.width, height: b.height }}
+          >
+            {b.lit && b.window && (
+              <span
+                className="absolute w-[2px] h-[2px] bg-cyan-200/35"
+                style={{
+                  top: "35%",
+                  left: "45%",
+                  animation: `bgAndorWindow 4s ease-in-out ${b.delay}s infinite`,
+                }}
+              />
+            )}
+          </div>
+        ))}
+      </div>
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse at 70% 30%, rgba(34,211,238,0.035) 0%, transparent 55%)",
+          animation: "bgAndorGlow 6s ease-in-out infinite",
+        }}
+      />
+    </div>
+  );
+}
+
+function UniVerseBackground() {
+  const [panels] = useState(() =>
+    Array.from({ length: 7 }, (_, i) => {
+      const s = i * 53 + 23;
+      return {
+        id: i,
+        left: `${(seededRandom(s) * 70).toFixed(4)}%`,
+        top: `${(seededRandom(s + 1) * 65 + 5).toFixed(4)}%`,
+        width: `${(seededRandom(s + 2) * 16 + 10).toFixed(4)}%`,
+        height: `${(seededRandom(s + 3) * 18 + 10).toFixed(4)}%`,
+        drift: parseFloat((seededRandom(s + 4) * 12 - 6).toFixed(4)),
+        delay: parseFloat((seededRandom(s + 5) * 6).toFixed(4)),
+        duration: parseFloat((seededRandom(s + 6) * 5 + 9).toFixed(4)),
+      };
+    })
+  );
+
+  return (
+    <div className="fixed inset-0 pointer-events-none overflow-hidden">
+      <style>{`
+        @keyframes bgVerseDrift {
+          0%, 100% { transform: translate(0, 0); }
+          50% { transform: translate(var(--drift), -8px); }
+        }
+        @keyframes bgVerseTone {
+          0% { background-size: 9px 9px; opacity: 0.012; }
+          100% { background-size: 15px 15px; opacity: 0.025; }
+        }
+        @keyframes bgVerseFill {
+          0% { width: 5%; opacity: 0.1; }
+          60% { width: 72%; opacity: 0.25; }
+          100% { width: 5%; opacity: 0.1; }
+        }
+        @keyframes bgVerseGlow {
+          0%, 100% { opacity: 0.015; }
+          50% { opacity: 0.035; }
+        }
+      `}</style>
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundImage: "radial-gradient(rgba(167,139,250,0.9) 1px, transparent 1px)",
+          animation: "bgVerseTone 12s ease-in-out infinite alternate",
+        }}
+      />
+      {panels.map((p) => (
+        <div
+          key={p.id}
+          className="absolute rounded-[4px] border border-violet-400/[0.05] bg-transparent"
+          style={{
+            left: p.left,
+            top: p.top,
+            width: p.width,
+            height: p.height,
+            "--drift": `${p.drift}px`,
+            animation: `bgVerseDrift ${p.duration}s ease-in-out ${p.delay}s infinite`,
+          } as React.CSSProperties}
+        />
+      ))}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse at 30% 35%, rgba(167,139,250,0.035) 0%, transparent 60%)",
+          animation: "bgVerseGlow 7s ease-in-out infinite",
+        }}
+      />
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-violet-400/10">
+        <div
+          className="absolute h-px bg-gradient-to-r from-violet-400/30 to-rose-400/30"
+          style={{ width: "5%", animation: "bgVerseFill 11s ease-in-out infinite" }}
+        />
+      </div>
+    </div>
+  );
+}
+
 function ShimmerBackground() {
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden">
@@ -256,14 +420,18 @@ interface Props {
 }
 
 export default function ProjectBackground({ slug }: Props) {
-  if (slug.includes("luna") || slug.includes("ai")) {
-    return <LunaBackground />;
+  switch (slug) {
+    case "luna-ai":
+      return <LunaBackground />;
+    case "baktag":
+      return <BaktagBackground />;
+    case "quantinda":
+      return <QuantindaBackground />;
+    case "em-andor":
+      return <AndorBackground />;
+    case "uni-verse":
+      return <UniVerseBackground />;
+    default:
+      return <ShimmerBackground />;
   }
-  if (slug.includes("baktag") || slug.includes("franklin")) {
-    return <BaktagBackground />;
-  }
-  if (slug.includes("quantinda")) {
-    return <QuantindaBackground />;
-  }
-  return <ShimmerBackground />;
 }

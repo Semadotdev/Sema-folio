@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { useContent } from "@/context/ContentContext";
 import PasswordModal from "@/components/PasswordModal";
-import AnimatedBackground from "@/components/AnimatedBackground";
+import { InteractiveGridPattern } from "@/components/ui/interactive-grid-pattern";
 import Logo3D from "@/components/Logo3D";
 import { marked } from "marked";
 
@@ -27,33 +27,12 @@ export default function Hero() {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      <AnimatedBackground />
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-transparent to-indigo-900/20" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent" />
-      <svg
-        className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.04]"
-        viewBox="0 0 800 800"
-        preserveAspectRatio="xMidYMid slice"
-      >
-        <path
-          d="M 400 100 C 250 100, 150 250, 200 400 C 250 550, 400 500, 400 400 C 400 300, 550 250, 600 400 C 650 550, 550 700, 400 700"
-          fill="none"
-          stroke="url(#s-gradient)"
-          strokeWidth="6"
-          strokeLinecap="round"
-          strokeDasharray="4 8"
-          style={{
-            animation: "draw-s 8s linear infinite",
-          }}
-        />
-        <defs>
-          <linearGradient id="s-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#3b82f6" />
-            <stop offset="50%" stopColor="#818cf8" />
-            <stop offset="100%" stopColor="#06b6d4" />
-          </linearGradient>
-        </defs>
-      </svg>
+      <InteractiveGridPattern
+        className="[mask-image:radial-gradient(50%_50%_at_center,white_20%,transparent_70%)]"
+        squares={[40, 40]}
+        width={24}
+        height={24}
+      />
 
       <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
         <motion.div
@@ -117,13 +96,13 @@ export default function Hero() {
         >
           <a
             href="#projects"
-            className="px-8 py-3 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-medium hover:shadow-lg hover:shadow-blue-500/25 transition-shadow"
+            className="px-8 py-3 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-medium hover:shadow-lg hover:shadow-blue-500/25 active:scale-95 transition-all"
           >
             View My Work
           </a>
           <a
             href="#contact"
-            className="px-8 py-3 rounded-full border border-zinc-700 text-zinc-300 font-medium hover:border-zinc-500 hover:text-white transition-colors"
+            className="px-8 py-3 rounded-full border border-zinc-700 text-zinc-300 font-medium hover:border-zinc-500 hover:text-white active:scale-95 transition-all"
           >
             Get In Touch
           </a>
